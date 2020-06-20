@@ -1,5 +1,6 @@
 import * as WebBrowser from "expo-web-browser";
 import * as React from "react";
+import axios from "axios";
 import {
   Image,
   Platform,
@@ -7,6 +8,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
+  Button,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -27,6 +30,33 @@ export default function HomeScreen() {
                 : require("../assets/images/robot-prod.png")
             }
             style={styles.welcomeImage}
+          />
+          <Button
+            title="Press me to Subtract"
+            onPress={() => {
+              Alert.alert("Alert", "Your button is working", [
+                {
+                  text: "Make Call",
+                  onPress: async () => {
+                    try {
+                      console.log("You pressed Make Call.");
+                      const response = await axios.get(
+                        "http://localhost:3333/getName/"
+                      );
+                      console.log(response.data);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  },
+                },
+                {
+                  text: "Cancel",
+                  onPress: () => {
+                    console.log("You pressed Cancel.");
+                  },
+                },
+              ]);
+            }}
           />
         </View>
 
