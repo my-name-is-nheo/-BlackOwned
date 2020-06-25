@@ -10,8 +10,7 @@ import {
 } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LoadingScreen from "./loadingScreen";
-
-import { MonoText } from "../components/StyledText";
+import Search from "./searchScreen";
 
 export default function HomeScreen(props) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -41,22 +40,22 @@ export default function HomeScreen(props) {
                         console.log("You pressed Make Call.");
                         const response = await axios.get(
                           "http://localhost:3333/getName/"
-                        );
-                        console.log(response.data);
-                      } catch (error) {
-                        console.log(error);
-                      }
+                          );
+                          console.log(response.data);
+                        } catch (error) {
+                          console.log(error);
+                        }
+                      },
                     },
-                  },
-                  {
-                    text: "Cancel",
-                    onPress: () => {
-                      console.log("You pressed Cancel.");
+                    {
+                      text: "Cancel",
+                      onPress: () => {
+                        console.log("You pressed Cancel.");
+                      },
                     },
-                  },
-                ]);
-              }}
-            /> */}
+                  ]);
+                }}
+              /> */}
           {!props.homeValue && (
             <View style={{ left: 50 }}>
               <TouchableOpacity style={styles.circularButton}>
@@ -80,6 +79,7 @@ export default function HomeScreen(props) {
               </View>
             </TouchableOpacity>
           </View>
+
           <View style={{ top: 100, left: 120 }}>
             <TouchableOpacity style={styles.circularButton}>
               <View>
@@ -87,6 +87,7 @@ export default function HomeScreen(props) {
               </View>
             </TouchableOpacity>
           </View>
+          <Search />
           <View style={{ top: 150, left: 150 }}>
             <TouchableOpacity style={styles.circularButton}>
               <View>

@@ -16,6 +16,7 @@ export default function App(props) {
     setIsHome(true);
     console.log("creatHome is working");
   };
+
   return (
     <NativeRouter>
       <SafeAreaView>
