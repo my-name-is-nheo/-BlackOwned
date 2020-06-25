@@ -1,6 +1,4 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import * as React from "react";
+import React, { useState } from "react";
 import {
   Text,
   Platform,
@@ -10,28 +8,31 @@ import {
   SafeAreaView,
 } from "react-native";
 import { NativeRouter, Route, Link } from "react-router-native";
-import Test from "./screens/test.js";
 import HomeScreen from "./screens/HomeScreen";
-import useCachedResources from "./hooks/useCachedResources";
-
-const Stack = createStackNavigator();
 
 export default function App(props) {
-  const isLoadingComplete = useCachedResources();
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <NativeRouter>
-        <SafeAreaView>
-          {/* <Link to="/test">
+  const [isHome, setIsHome] = useState(false);
+  const createHome = function () {
+    setIsHome(true);
+    console.log("creatHome is working");
+  };
+  return (
+    <NativeRouter>
+      <SafeAreaView>
+        {/* <Link to="/test">
             <Text>To Test.js</Text>
           </Link> */}
-          <Route path="/" component={HomeScreen}></Route>
-        </SafeAreaView>
-      </NativeRouter>
-    );
-  }
+        <Route
+          path="/"
+          render={({ ...props }) => {
+            return (
+              <HomeScreen {...props} isHome={createHome} homeValue={isHome} />
+            );
+          }}
+        ></Route>
+      </SafeAreaView>
+    </NativeRouter>
+  );
 }
 
 const styles = StyleSheet.create({
