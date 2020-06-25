@@ -21,6 +21,10 @@ export default function HomeScreen(props) {
       props.isHome();
     }, 5000);
   });
+  const openSearchPage = () => {
+    props.history.push("/search");
+    console.log("this is location pathname ", props.location.pathname);
+  };
   return (
     <View>
       {!isLoaded && <LoadingScreen />}
@@ -81,13 +85,15 @@ export default function HomeScreen(props) {
           </View>
 
           <View style={{ top: 100, left: 120 }}>
-            <TouchableOpacity style={styles.circularButton}>
+            <TouchableOpacity
+              style={styles.circularButton}
+              onPress={openSearchPage}
+            >
               <View>
                 <Text>Search</Text>
               </View>
             </TouchableOpacity>
           </View>
-          <Search />
           <View style={{ top: 150, left: 150 }}>
             <TouchableOpacity style={styles.circularButton}>
               <View>

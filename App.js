@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { NativeRouter, Route, Link } from "react-router-native";
 import HomeScreen from "./screens/HomeScreen";
+import Search from "./screens/searchScreen";
 
 export default function App(props) {
   const [isHome, setIsHome] = useState(false);
@@ -23,6 +24,7 @@ export default function App(props) {
         {/* <Link to="/test">
             <Text>To Test.js</Text>
           </Link> */}
+        <Route path="/search" exact component={Search}></Route>
         <Route
           path="/"
           render={({ ...props }) => {
