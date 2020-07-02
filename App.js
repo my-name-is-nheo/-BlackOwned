@@ -47,6 +47,7 @@ export default function App(props) {
           ></Route>
           <Route
             path="/"
+            exact
             render={(props) => {
               return (
                 <HomeScreen
