@@ -30,9 +30,22 @@ export default function HomeScreen(props) {
     }
   });
   const openSearchPage = () => {
+    console.log(props.history);
     props.history.push("/search");
-    console.log("this is location pathname ", props.location.pathname);
   };
+  const openAdd = () => {
+    console.log("it tickles");
+    props.history.push("/add");
+    console.log(props.history, "this yo history");
+  };
+
+  const goTofavorites = () => {
+    props.history.push("/favorites");
+  };
+  const goToSettings = () => {
+    props.history.push("/settings");
+  };
+
   return !props.noLoad ? (
     <View>
       {!isLoaded && <LoadingScreen />}
@@ -52,14 +65,17 @@ export default function HomeScreen(props) {
             </View>
           )}
           <View style={{ left: 80, top: 40 }}>
-            <TouchableOpacity style={styles.circularButton}>
+            <TouchableOpacity
+              onPress={goTofavorites}
+              style={styles.circularButton}
+            >
               <View>
                 <Text>Favorites</Text>
               </View>
             </TouchableOpacity>
           </View>
           <View style={{ top: 60, left: 20 }}>
-            <TouchableOpacity style={styles.circularButton}>
+            <TouchableOpacity style={styles.circularButton} onPress={openAdd}>
               <View>
                 <Text>Add</Text>
               </View>
@@ -76,8 +92,12 @@ export default function HomeScreen(props) {
               </View>
             </TouchableOpacity>
           </View>
+
           <View style={{ top: 150, left: 150 }}>
-            <TouchableOpacity style={styles.circularButton}>
+            <TouchableOpacity
+              onPress={goToSettings}
+              style={styles.circularButton}
+            >
               <View>
                 <Text>Setting</Text>
               </View>
@@ -104,14 +124,17 @@ export default function HomeScreen(props) {
             </View>
           )}
           <View style={{ left: 80, top: 40 }}>
-            <TouchableOpacity style={styles.circularButton}>
+            <TouchableOpacity
+              onPress={goTofavorites}
+              style={styles.circularButton}
+            >
               <View>
                 <Text>Favorites</Text>
               </View>
             </TouchableOpacity>
           </View>
           <View style={{ top: 60, left: 20 }}>
-            <TouchableOpacity style={styles.circularButton}>
+            <TouchableOpacity onPress={openAdd} style={styles.circularButton}>
               <View>
                 <Text>Add</Text>
               </View>
@@ -129,7 +152,10 @@ export default function HomeScreen(props) {
             </TouchableOpacity>
           </View>
           <View style={{ top: 150, left: 150 }}>
-            <TouchableOpacity style={styles.circularButton}>
+            <TouchableOpacity
+              onPress={goToSettings}
+              style={styles.circularButton}
+            >
               <View>
                 <Text>Setting</Text>
               </View>

@@ -10,6 +10,9 @@ import {
 import { NativeRouter, Route, Link, Switch } from "react-router-native";
 import HomeScreen from "./screens/HomeScreen";
 import Search from "./screens/searchScreen";
+import AddScreen from "./screens/addScreen";
+import FavoriteScreen from "./screens/favoriteScreen";
+import SettingScreen from "./screens/settingScreen";
 
 export default function App(props) {
   const [isHome, setIsHome] = useState(false);
@@ -46,9 +49,54 @@ export default function App(props) {
             }}
           ></Route>
           <Route
+            path="/add"
+            exact
+            render={(props) => {
+              return (
+                <AddScreen
+                  {...props}
+                  noTimeOut={noTimeOut}
+                  noLoad={createNoLoad}
+                  backOne={props.history.entries[0].pathname}
+                />
+              );
+            }}
+          ></Route>
+          <Route
+            path="/favorites"
+            exact
+            render={(props) => {
+              console.log(props, "Props");
+              return (
+                <FavoriteScreen
+                  {...props}
+                  noTimeOut={noTimeOut}
+                  noLoad={createNoLoad}
+                  backOne={props.history.entries[0].pathname}
+                />
+              );
+            }}
+          ></Route>
+          <Route
+            path="/settings"
+            exact
+            render={(props) => {
+              console.log(props, "Props");
+              return (
+                <SettingScreen
+                  {...props}
+                  noTimeOut={noTimeOut}
+                  noLoad={createNoLoad}
+                  backOne={props.history.entries[0].pathname}
+                />
+              );
+            }}
+          ></Route>
+          <Route
             path="/"
             exact
             render={(props) => {
+              console.log("getting back to home");
               return (
                 <HomeScreen
                   {...props}
@@ -75,3 +123,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
+
+/*
+07/03/2020 
+
+- get ip address, use geolocation api to find location
+- government ip of black businesses to find all BB and filter based on location of ip address
+*/

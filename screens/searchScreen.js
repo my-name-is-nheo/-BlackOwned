@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ipService } from "../services/ipService";
 import { View, Text, SafeAreaView, BackHandler, Button } from "react-native";
 import axios from "axios";
-// import ip from "../services/ipService";
+import { ip } from "../services/ipService";
 
 class Search extends React.Component {
   constructor(props) {
@@ -16,11 +16,7 @@ class Search extends React.Component {
   componentDidMount = () => {
     const ipCall = async () => {
       try {
-        // const ipResult = await ip();
-        const ipResult = await axios.get(
-          "http://localhost:5000/api/businesses/ip"
-        );
-        console.log(ipResult, " this is ipResult on searchScreen");
+        const ipResult = await ip();
         this.setState({ ipState: ipResult });
       } catch (error) {
         console.log("componentDidMount error on searchScreen.js");
@@ -34,37 +30,28 @@ class Search extends React.Component {
     BackHandler.removeEventListener("hardwareBackPress", this.backOne);
   };
 
-  whatsIp = async () => {
-    console.log("click is working");
-    try {
-      const ipizzle = await axios.get(
-        "http://192.168.43.49:5000/api/businesses/ip"
-      );
-      console.log(ipizzle, "this passed");
-
-      alert(ipizzle);
-    } catch (err) {
-      console.log(err, "errr me mateys");
-    }
-  };
-
   backOne = () => {
     this.props.noTimeOut();
     this.props.noLoad();
     this.props.history.push(this.props.backOne);
     return true;
   };
-  // componentWillMount(){
-  //   BackHandler.addEventListener("hardwareBackpress", this.exit)
-  // };
-  // componentWillUnmount(){
-  //   BackHandler.removeEventListener("hardwareBackPress", this.exit)
-  // };
+
   render() {
     return (
-      <View style={{ height: 100, width: 100, backGroundColor: "blue" }}>
+      <View
+        style={{
+          top: 200,
+          flex: 1,
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
+          height: 100,
+          width: 100,
+          backGroundColor: "blue",
+        }}
+      >
         <Text>Happy Corona Day!</Text>
-        <Button onPress={this.whatsIp} title="ip address"></Button>
       </View>
     );
   }
