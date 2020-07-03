@@ -16,27 +16,21 @@ export default function HomeScreen(props) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    console.log(props.noTimeOut, "should at some point be true");
     if (!props.noTimeOut) {
       setTimeout(() => {
-        console.log("set timeout is running like an asshole");
         setIsLoaded(true);
         props.isHome();
       }, 5000);
     } else {
-      console.log(isLoaded, props.homeValue, "isLoaded and propsHOmeValue");
       setIsLoaded(true);
       props.isHome();
     }
   });
   const openSearchPage = () => {
-    console.log(props.history);
     props.history.push("/search");
   };
   const openAdd = () => {
-    console.log("it tickles");
     props.history.push("/add");
-    console.log(props.history, "this yo history");
   };
 
   const goTofavorites = () => {

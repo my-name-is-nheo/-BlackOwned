@@ -20,7 +20,6 @@ export default function App(props) {
   const [nto, setNto] = useState(false);
   const createHome = function () {
     setIsHome(true);
-    console.log("creatHome is working");
   };
   const createNoLoad = () => {
     setNoLoad(true);
@@ -37,7 +36,6 @@ export default function App(props) {
             path="/search"
             exact
             render={(props) => {
-              console.log(props, "Props");
               return (
                 <Search
                   {...props}
@@ -66,7 +64,6 @@ export default function App(props) {
             path="/favorites"
             exact
             render={(props) => {
-              console.log(props, "Props");
               return (
                 <FavoriteScreen
                   {...props}
@@ -81,7 +78,6 @@ export default function App(props) {
             path="/settings"
             exact
             render={(props) => {
-              console.log(props, "Props");
               return (
                 <SettingScreen
                   {...props}
@@ -96,7 +92,6 @@ export default function App(props) {
             path="/"
             exact
             render={(props) => {
-              console.log("getting back to home");
               return (
                 <HomeScreen
                   {...props}
@@ -125,8 +120,13 @@ const styles = StyleSheet.create({
 });
 
 /*
-07/03/2020 
+07/06/2020 
+Find way of including data payload in an element so 
+that it can be fed to serpsearch api without user seeing it.
 
-- get ip address, use geolocation api to find location
-- government ip of black businesses to find all BB and filter based on location of ip address
+Once test function on searchScreen demonstrates that we can successfully carry out a search, then implement
+functionality that allows user to click on name and receive a list of Google links
+
+
+
 */

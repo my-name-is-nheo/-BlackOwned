@@ -1,25 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { ipService } from "../services/ipService";
-import { View, Text, SafeAreaView, BackHandler, Button } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  BackHandler,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import axios from "axios";
 import { ip } from "../services/ipService";
+import businessSearch from "../services/businessSearch";
+import tokens from "../token";
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { ipState: null };
-    //   setTimeout(() => {
-    //     console.log(this.state.ipState, " this is ip state on Timeout");
-    //   }, 2000);
+    this.state = { ipState: null, ipCity: null, businesses: null };
   }
 
   componentDidMount = () => {
     const ipCall = async () => {
       try {
+        console.log("CDM is running");
         const ipResult = await ip();
-        this.setState({ ipState: ipResult });
+        console.log(ipResult, typeof ipResult, "IPRESULT AND TYPE");
+        var userLocation = await axios.get(
+          `http://ip-api.com/json/74.96.248.200`
+        );
+        const city = userLocation.data.city;
+        const businesses = await axios.get(tokens.samApi);
+        const groomedArray = this.usefulInfo(businesses.data.results);
+
+        this.setState({
+          ipCity: city,
+          ipState: ipResult,
+          businesses: groomedArray,
+        });
       } catch (error) {
-        console.log("componentDidMount error on searchScreen.js");
+        console.log(error, "componentDidMount error on searchScreen.js");
       }
     };
 
@@ -37,6 +56,27 @@ class Search extends React.Component {
     return true;
   };
 
+  usefulInfo = (arr) => {
+    const mapInfo = arr.map((element) => {
+      let infoObj = {
+        name: element.legalBusinessName,
+        city: element.samAddress.city,
+        zipcode: element.samAddress.zip,
+      };
+      return infoObj;
+    });
+    return mapInfo;
+  };
+
+  // createList = (arr) => {
+  //   arr.map((element) => {
+  //     return <Button title={element.name}></Button>;
+  //   });
+  // };
+  test = (e) => {
+    console.log(e.target.value, "is there a value");
+  };
+
   render() {
     return (
       <View
@@ -48,14 +88,20 @@ class Search extends React.Component {
           alignItems: "center",
           height: 100,
           width: 100,
-          backGroundColor: "blue",
         }}
       >
-        <Text>Happy Corona Day!</Text>
+        <Text>Welcome to Search Page</Text>
+        <TouchableOpacity
+          style={{ flex: 1, alignContent: "center" }}
+          onPress={this.test}
+        >
+          <View>
+            <Text>Search me</Text>
+          </View>
+        </TouchableOpacity>
+        <View title="search me" value={3} onPress={this.test}></View>
       </View>
     );
   }
 }
 export default Search;
-
-//07/01/2020 - need to set up backend to return ip, create fucking backhandler for every thing
