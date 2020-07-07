@@ -120,7 +120,11 @@ const styles = StyleSheet.create({
 });
 
 /*
-07/06/2020 
+07/09/2020 
+
+Find a way to make search results clickable and stylable in search screen
+Make each result searchable on Google
+
 Find way of including data payload in an element so 
 that it can be fed to serpsearch api without user seeing it.
 
