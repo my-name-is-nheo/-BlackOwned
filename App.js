@@ -13,6 +13,7 @@ import Search from "./screens/searchScreen";
 import AddScreen from "./screens/addScreen";
 import FavoriteScreen from "./screens/favoriteScreen";
 import SettingScreen from "./screens/settingScreen";
+import RegisterScreen from "./screens/registerScreen";
 
 export default function App(props) {
   const [isHome, setIsHome] = useState(false);
@@ -52,6 +53,20 @@ export default function App(props) {
             render={(props) => {
               return (
                 <AddScreen
+                  {...props}
+                  noTimeOut={noTimeOut}
+                  noLoad={createNoLoad}
+                  backOne={props.history.entries[0].pathname}
+                />
+              );
+            }}
+          ></Route>
+          <Route
+            path="/register"
+            exact
+            render={(props) => {
+              return (
+                <RegisterScreen
                   {...props}
                   noTimeOut={noTimeOut}
                   noLoad={createNoLoad}

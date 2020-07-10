@@ -15,6 +15,7 @@ import businessSearch from "../services/businessSearch";
 import tokens from "../token";
 import { MaterialIcons } from "@expo/vector-icons";
 import HyperLink from "./../services/urlService";
+import goToUrl from "../services/goToUrl";
 
 class Search extends React.Component {
   constructor(props) {
@@ -54,13 +55,19 @@ class Search extends React.Component {
   };
 
   listResults = (arr) => {
+    console.log(arr, "our array");
+
     const results = arr.map((place, i) => {
       return (
-        <View key={i} style={{ alignItems: "center" }}>
+        <View
+          key={i}
+          style={{
+            alignItems: "center",
+          }}
+        >
           <Text
-            onPress={() => {
-              console.log("pressed button on text");
-            }}
+            onPress={this.googleSearch}
+            value={place.name}
             style={{
               color: "white",
               textDecorationLine: "underline",
@@ -74,7 +81,12 @@ class Search extends React.Component {
     });
     if (results.length === 0) {
       return (
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <MaterialIcons name="error" size={100} color="black" />
           <Text style={{ marginTop: 20, fontSize: 20, marginBottom: 40 }}>
             No businesses found in your area!
@@ -112,6 +124,7 @@ class Search extends React.Component {
       return 100;
     }
   };
+
   usefulInfo = (arr) => {
     const mapInfo = arr.map((element) => {
       let infoObj = {
@@ -122,6 +135,29 @@ class Search extends React.Component {
       return infoObj;
     });
     return mapInfo;
+  };
+  googleSearch = async (event) => {
+    try {
+      const querySearch = event._dispatchInstances.memoizedProps.children;
+      const businesses = [...this.state.nearbyBusinesses];
+      let city;
+      for (var index = 0; index < businesses.length; index++) {
+        var currentBusiness = businesses[index];
+        if (currentBusiness.name === querySearch) {
+          city = currentBusiness.city;
+          break;
+        }
+      }
+      // http://api.serpstack.com/search?access_key=721b444198c55793a05b62aa63af4c18&query=mcdonalds
+
+      const searchGoogle = await axios.get(
+        `http://api.serpstack.com/search?access_key=${tokens.serpApi}&query=${querySearch} ${city}`
+      );
+
+      goToUrl(searchGoogle.data.request.search_url);
+    } catch (err) {
+      console.log(err, "This is error from googleSearch in searchScreen.js");
+    }
   };
 
   // createList = (arr) => {
@@ -170,15 +206,15 @@ class Search extends React.Component {
             <Text style={{ left: 10, fontSize: 16, fontWeight: "600" }}>
               Below is a list of black-owned businesses near you!
             </Text>
-
-            <View
-              style={{
-                marginTop: this.evaluateListReturn(this.listResults),
-              }}
-            ></View>
           </View>
         </View>
-        {this.listResults(this.state.nearbyBusinesses)}
+        <View
+          style={{
+            marginTop: this.evaluateListReturn(this.listResults),
+          }}
+        >
+          {this.listResults(this.state.nearbyBusinesses)}
+        </View>
       </View>
     );
   }

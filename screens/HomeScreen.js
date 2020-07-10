@@ -39,6 +39,9 @@ export default function HomeScreen(props) {
   const goToSettings = () => {
     props.history.push("/settings");
   };
+  const goToRegister = () => {
+    props.history.push("/register");
+  };
 
   return !props.noLoad ? (
     <View>
@@ -97,6 +100,16 @@ export default function HomeScreen(props) {
               </View>
             </TouchableOpacity>
           </View>
+          <View style={{ left: 100, top: 100 }}>
+            <TouchableOpacity
+              onPress={goToRegister}
+              style={styles.circularButton}
+            >
+              <View>
+                <Text>Register</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </ImageBackground>
       )}
     </View>
@@ -152,6 +165,16 @@ export default function HomeScreen(props) {
             >
               <View>
                 <Text>Setting</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ left: 100, top: 100 }}>
+            <TouchableOpacity
+              onPress={goToRegister}
+              style={styles.circularButton}
+            >
+              <View>
+                <Text>Register</Text>
               </View>
             </TouchableOpacity>
           </View>
