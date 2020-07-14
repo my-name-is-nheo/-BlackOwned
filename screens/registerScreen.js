@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Button as muiButton } from "react-native-material-ui";
+import { TextField as MuiTextfield } from "react-native-materialui-textfield";
 
 import {
   View,
@@ -7,6 +9,8 @@ import {
   BackHandler,
   TextInput,
   Button,
+  AsyncStorage,
+  Image,
 } from "react-native";
 
 class RegisterScreen extends React.Component {
@@ -19,80 +23,38 @@ class RegisterScreen extends React.Component {
       password: "",
       email: "",
     };
-    // this.inputsArray = [
-    //   {
-    //     placeholder: "First Name",
-    //     value: this.state.firstName,
-    //     onChange: this.handleLastName,
-    //   },
-    //   {
-    //     placeholder: " Last Name",
-    //     value: this.state.lastName,
-    //     onChange: this.handleLastName,
-    //   },
-    //   {
-    //     placeholder: "Email",
-    //     value: this.state.email,
-    //     onChange: this.handleEmail,
-    //   },
-    //   {
-    //     placeholder: "Password",
-    //     value: this.state.password,
-    //     onChange: this.handlePassword,
-    //   },
-    // ];
-
-    // this.mappedInputs = this.inputsArray.map((item, i) => {
-    //   return (
-    //     <TextInput
-    //       style={{
-    //         marginTop: i === 0 ? 100 : 50,
-    //         borderBottomWidth: 2.5,
-    //         width: "50%",
-    //       }}
-    //       onChangeText={item.onChange}
-    //       value={item.value}
-    //       placeholder={item.placeholder}
-    //     />
-    //   );
-    // });
   }
 
   returnMappedInputs = () => {
     const inputsArray = [
       {
-        placeholder: "First Name",
+        label: "First Name",
         value: this.state.firstName,
         onChange: this.handleLastName,
       },
       {
-        placeholder: " Last Name",
+        label: "Last Name",
         value: this.state.lastName,
         onChange: this.handleLastName,
       },
       {
-        placeholder: "Email",
+        label: "Email",
         value: this.state.email,
         onChange: this.handleEmail,
       },
       {
-        placeholder: "Password",
+        label: "Password",
         value: this.state.password,
         onChange: this.handlePassword,
       },
     ];
     const mappedInputs = inputsArray.map((item, i) => {
       return (
-        <TextInput
+        <MuiTextfield
           key={i}
-          style={{
-            marginTop: i === 0 ? 100 : 50,
-            borderBottomWidth: 2.5,
-            width: "50%",
-          }}
-          onChangeText={item.onChange}
-          value={item.value}
-          placeholder={item.placeholder}
+          activeLineWidth={3}
+          label={item.label}
+          editable={true}
         />
       );
     });
@@ -122,9 +84,32 @@ class RegisterScreen extends React.Component {
     this.setState({ email: text });
   };
   handlePassword = (text) => {
-    this.setState({ passwor: text });
+    this.setState({ password: text });
+  };
+  handleSubmit = async () => {
+    try {
+      await AsyncStorage.setItem("ballsacks", "Taste salty");
+      const ballsacks = await AsyncStorage.getItem("ballsacks");
+      console.log(ballsacks, " successfully retrieved from AsyncStorage");
+    } catch (err) {
+      console.log("backsacks was not saved to AsyncStorage");
+    }
   };
 
+  /*
+  We'll collect all of the data in state and create an object as our payload to send 
+  via a service to a post route for registration that we'll create in the backend.
+
+  Upon creation of registration, user will be given a token that authenticates them 
+  as a user for the next thirty days from their last log in (so after thirty days of 
+    inactivity, they'll need to sign in again).
+
+    We'll set this token to innerStorage (but the async type)
+
+    Provide feedback on whether or not password and username fields are being correctly 
+    created
+
+  */
   render() {
     return (
       <View
@@ -147,10 +132,19 @@ class RegisterScreen extends React.Component {
             businesses, pressure your representatives, and more!
           </Text>
         </View>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ marginLeft: 100, width: "50%" }}>
           {this.returnMappedInputs()}
         </View>
-        <Button title="Submit" />
+        <View
+          style={{
+            marginTop: 60,
+            borderRadius: "55%",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <Button title="Submit" onPress={this.handleSubmit} />
+        </View>
       </View>
     );
   }

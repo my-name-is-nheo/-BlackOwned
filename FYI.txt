@@ -1,0 +1,10 @@
+for future use- 
+
+
+clear cache
+npm start --reset-cache
+
+asynstorage page 
+https://reactnative.dev/docs/asyncstorage.html
+
+
