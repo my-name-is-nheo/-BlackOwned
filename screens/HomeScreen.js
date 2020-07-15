@@ -7,6 +7,7 @@ import {
   Button,
   StyleSheet,
   ImageBackground,
+  AsyncStorage,
 } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LoadingScreen from "./loadingScreen";
@@ -14,8 +15,14 @@ import Search from "./searchScreen";
 
 export default function HomeScreen(props) {
   const [isLoaded, setIsLoaded] = useState(false);
-
+  const [token, setToken] = useState("");
   useEffect(() => {
+    async function findToken() {
+      const newToken = await AsyncStorage.getItem("userToken");
+      setToken(newToken);
+    }
+    findToken();
+
     if (!props.noTimeOut) {
       setTimeout(() => {
         setIsLoaded(true);
@@ -26,6 +33,23 @@ export default function HomeScreen(props) {
       props.isHome();
     }
   });
+
+  const logOut = () => {
+    if (token) {
+      console.log(Boolean(token), token, "here is the token");
+      return (
+        <Button
+          title="Log out"
+          onPress={async () => {
+            await AsyncStorage.removeItem("userToken");
+            setToken("");
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
   const openSearchPage = () => {
     props.history.push("/search");
   };
@@ -100,16 +124,19 @@ export default function HomeScreen(props) {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{ left: 100, top: 100 }}>
-            <TouchableOpacity
-              onPress={goToRegister}
-              style={styles.circularButton}
-            >
-              <View>
-                <Text>Register</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          {!token && (
+            <View style={{ left: 100, top: 100 }}>
+              <TouchableOpacity
+                onPress={goToRegister}
+                style={styles.circularButton}
+              >
+                <View>
+                  <Text>Register</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+          {logOut()}
         </ImageBackground>
       )}
     </View>
@@ -168,16 +195,20 @@ export default function HomeScreen(props) {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{ left: 100, top: 100 }}>
-            <TouchableOpacity
-              onPress={goToRegister}
-              style={styles.circularButton}
-            >
-              <View>
-                <Text>Register</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          {!token && (
+            <View style={{ left: 100, top: 100 }}>
+              <TouchableOpacity
+                onPress={goToRegister}
+                style={styles.circularButton}
+              >
+                <View>
+                  <Text>Register</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {logOut()}
         </ImageBackground>
       )}
     </View>

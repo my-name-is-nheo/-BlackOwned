@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button as muiButton } from "react-native-material-ui";
 import { TextField as MuiTextfield } from "react-native-materialui-textfield";
-
+import axios from "axios";
 import {
   View,
   Text,
@@ -11,13 +11,15 @@ import {
   Button,
   AsyncStorage,
   Image,
+  Dimensions,
 } from "react-native";
 
 class RegisterScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.screenWidth = Math.round(Dimensions.get("window").width);
+
     this.state = {
-      setting: null,
       firstName: "",
       lastName: "",
       password: "",
@@ -30,7 +32,7 @@ class RegisterScreen extends React.Component {
       {
         label: "First Name",
         value: this.state.firstName,
-        onChange: this.handleLastName,
+        onChange: this.handleFirstName,
       },
       {
         label: "Last Name",
@@ -53,6 +55,9 @@ class RegisterScreen extends React.Component {
         <MuiTextfield
           key={i}
           activeLineWidth={3}
+          onChangeText={(e) => {
+            item.onChange(e);
+          }}
           label={item.label}
           editable={true}
         />
@@ -88,11 +93,26 @@ class RegisterScreen extends React.Component {
   };
   handleSubmit = async () => {
     try {
-      await AsyncStorage.setItem("ballsacks", "Taste salty");
-      const ballsacks = await AsyncStorage.getItem("ballsacks");
-      console.log(ballsacks, " successfully retrieved from AsyncStorage");
+      console.log("Entering registration");
+      const payload = { ...this.state };
+
+      const postToken = await axios.post(
+        "http://192.168.43.49:5000/api/userRegistration/ ",
+        payload
+      );
+      console.log("Got past post");
+      const token = postToken.headers["x-auth-token"];
+
+      await AsyncStorage.setItem("userToken", token);
+      console.log("Got past storage");
+      this.props.noTimeOut();
+      setTimeout(() => {
+        this.props.history.push("/");
+      }, 500);
+
+      console.log("reached notimeout history");
     } catch (err) {
-      console.log("backsacks was not saved to AsyncStorage");
+      console.log(err, "axios post failed");
     }
   };
 
@@ -132,7 +152,12 @@ class RegisterScreen extends React.Component {
             businesses, pressure your representatives, and more!
           </Text>
         </View>
-        <View style={{ marginLeft: 100, width: "50%" }}>
+        <View
+          style={{
+            marginLeft: this.screenWidth / 5,
+            width: (this.screenWidth / 5) * 3,
+          }}
+        >
           {this.returnMappedInputs()}
         </View>
         <View
