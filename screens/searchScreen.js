@@ -16,11 +16,12 @@ import tokens from "../token";
 import { MaterialIcons } from "@expo/vector-icons";
 import HyperLink from "./../services/urlService";
 import goToUrl from "../services/goToUrl";
+import { WebBrowserResultType } from "expo-web-browser";
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { nearbyBusinesses: [] };
+    this.state = { nearbyBusinesses: null };
   }
 
   componentDidMount = () => {
@@ -28,10 +29,11 @@ class Search extends React.Component {
       try {
         const ipResult = await ip();
         var userLocation = await axios.get(
-          `http://ip-api.com/json/38.106.217.167`
+          `http://ip-api.com/json/38.106.217.167` // will eventually load
         ); // `http://ip-api.com/json/${ipResult}`
         const currentCity = userLocation.data.city;
         const businesses = await axios.get(tokens.samApi);
+        console.log(businesses, "here be the biz");
         const groomedArray = this.usefulInfo(businesses.data.results);
         const nearbyBusinesses = this.searchAroundMe(groomedArray, currentCity);
         this.setState({ nearbyBusinesses });
@@ -54,10 +56,16 @@ class Search extends React.Component {
     return true;
   };
 
-  listResults = (arr) => {
-    console.log(arr, "our array");
+  listResults = (input) => {
+    if (input === null) {
+      return (
+        <View style={{ alignItems: "center" }}>
+          <Text>Space for Animation</Text>
+        </View>
+      );
+    }
 
-    const results = arr.map((place, i) => {
+    const results = input.map((place, i) => {
       return (
         <View
           key={i}
@@ -79,7 +87,7 @@ class Search extends React.Component {
         </View>
       );
     });
-    if (results.length === 0) {
+    if (input.length === 0) {
       return (
         <View
           style={{
@@ -153,7 +161,6 @@ class Search extends React.Component {
       const searchGoogle = await axios.get(
         `http://api.serpstack.com/search?access_key=${tokens.serpApi}&query=${querySearch} ${city}`
       );
-
       goToUrl(searchGoogle.data.request.search_url);
     } catch (err) {
       console.log(err, "This is error from googleSearch in searchScreen.js");

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 import {
   Text,
   View,
   Alert,
   Button,
+  StatusBar,
+  Dimensions,
   StyleSheet,
   ImageBackground,
   AsyncStorage,
@@ -22,7 +25,20 @@ export default function HomeScreen(props) {
       setToken(newToken);
     }
     findToken();
+    /*
+7/16/2020 - You guys have to fix styling for 
+name bar.  We should add a menu bar above it
+that holds our login info and potentially our
+log out.
 
+Create a login component, make it so that it can both
+log in and also block out malicious users if they
+try to login in too many times.
+
+We need to be able to access settings, add a vibrator
+
+
+*/
     if (!props.noTimeOut) {
       setTimeout(() => {
         setIsLoaded(true);
@@ -34,17 +50,38 @@ export default function HomeScreen(props) {
     }
   });
 
-  const logOut = () => {
+  const greeting = () => {
+    console.log(token);
     if (token) {
-      console.log(Boolean(token), token, "here is the token");
+      const untokener = jwt_decode(token);
+      console.log(untokener, " this is untokener");
       return (
-        <Button
-          title="Log out"
-          onPress={async () => {
-            await AsyncStorage.removeItem("userToken");
-            setToken("");
-          }}
-        />
+        <TouchableOpacity style={styles.greetingButton}>
+          <View>
+            <Text>Welcome, {untokener.firstName}! </Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+  };
+
+  const logOut = () => {
+    [];
+    if (token) {
+      return (
+        <View style={{ left: 50 }}>
+          <TouchableOpacity
+            onPress={async () => {
+              await AsyncStorage.removeItem("userToken");
+              setToken("");
+            }}
+            style={styles.circularButton}
+          >
+            <View>
+              <Text>Log Out</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       );
     }
     return null;
@@ -63,8 +100,12 @@ export default function HomeScreen(props) {
   const goToSettings = () => {
     props.history.push("/settings");
   };
+
   const goToRegister = () => {
     props.history.push("/register");
+  };
+  const goToLogIn = () => {
+    props.history.push("/logIn");
   };
 
   return !props.noLoad ? (
@@ -76,6 +117,7 @@ export default function HomeScreen(props) {
           source={require("../assets/images/women.png")}
           style={{ height: "100%", width: "100%" }}
         >
+          {greeting()}
           {!props.homeValue && (
             <View style={{ left: 50 }}>
               <TouchableOpacity style={styles.circularButton}>
@@ -127,11 +169,11 @@ export default function HomeScreen(props) {
           {!token && (
             <View style={{ left: 100, top: 100 }}>
               <TouchableOpacity
-                onPress={goToRegister}
+                onPress={goToLogIn}
                 style={styles.circularButton}
               >
                 <View>
-                  <Text>Register</Text>
+                  <Text>Log in</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -198,11 +240,11 @@ export default function HomeScreen(props) {
           {!token && (
             <View style={{ left: 100, top: 100 }}>
               <TouchableOpacity
-                onPress={goToRegister}
+                onPress={goToLogIn}
                 style={styles.circularButton}
               >
                 <View>
-                  <Text>Register</Text>
+                  <Text>Log in</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -215,6 +257,8 @@ export default function HomeScreen(props) {
   );
 }
 
+const screenWidth = Math.round(Dimensions.get("window").width);
+
 const styles = StyleSheet.create({
   circularButton: {
     borderWidth: 1,
@@ -224,6 +268,17 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
+    backgroundColor: "pink",
+  },
+  greetingButton: {
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.2)",
+    left: screenWidth - 100,
+    top: Platform.OS === "android" ? StatusBar.currentHeight + 22 : 0,
+    justifyContent: "center",
+    width: 100,
+    height: 100,
+
     backgroundColor: "pink",
   },
 });

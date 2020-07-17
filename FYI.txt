@@ -10,3 +10,7 @@ https://reactnative.dev/docs/asyncstorage.html
 
 not localhost but
 http://192.168.43.49:5000
+
+
+padding top for android/ios
+paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
