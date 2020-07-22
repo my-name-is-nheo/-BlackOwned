@@ -11,6 +11,7 @@ import {
   AsyncStorage,
   Image,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 
 class LoginScreen extends React.Component {
@@ -71,28 +72,32 @@ class LoginScreen extends React.Component {
   };
   handleSubmit = async () => {
     try {
-      console.log("Entering registration");
       const payload = { ...this.state };
-
       const postToken = await axios.post(
-        "http://192.168.43.49:5000/api/userLogin/ ",
+        "http://192.168.43.49:5000/api/userLogin/",
         payload
       );
-      console.log(postToken, "Got past the post");
-      const token = postToken.headers["x-auth-token"];
 
+      const token = postToken.headers["x-auth-token"];
+      // console.log("got past token");
       await AsyncStorage.setItem("userToken", token);
-      console.log("Got past storage");
+      // console.log("Got past storage");
       this.props.noTimeOut();
       setTimeout(() => {
         this.props.history.push("/");
       }, 500);
-
-      console.log("reached notimeout history");
+      //FIGURE OUT WHY IT IS NOT LOGGING IN WITH CORRECT DATA!!!!!!!
     } catch (err) {
-      console.log(err, "axios post failed");
+      if (err.response.data === "banned") {
+        this.props.history.push("/banned");
+      }
+      console.log(err.response.data, "axios post failed");
     }
   };
+  registerClick = () => {
+    this.props.history.push("/register");
+  };
+  goBackToPreviousScreen = () => {};
 
   render() {
     return (
@@ -132,6 +137,21 @@ class LoginScreen extends React.Component {
           }}
         >
           <Button title="Submit" onPress={this.handleSubmit} />
+          <TouchableOpacity
+            style={{
+              marginTop: 20,
+              borderRadius: 10,
+              backgroundColor: "#2196f3",
+            }}
+            onPress={this.registerClick}
+          >
+            <View>
+              <Text style={{ color: "white", fontSize: 20 }}>
+                {"   "}
+                Click here to Register!{"   "}
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );

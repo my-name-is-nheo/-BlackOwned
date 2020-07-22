@@ -18,6 +18,10 @@ class RegisterScreen extends React.Component {
   constructor(props) {
     super(props);
     this.screenWidth = Math.round(Dimensions.get("window").width);
+    console.log(
+      this.props.history,
+      " this is props.history from registerScreen"
+    );
 
     this.state = {
       firstName: "",
@@ -74,6 +78,8 @@ class RegisterScreen extends React.Component {
   };
 
   backOne = () => {
+    if (this.props.history) {
+    }
     this.props.noTimeOut();
     this.props.noLoad();
     this.props.history.push(this.props.backOne);
@@ -131,6 +137,7 @@ class RegisterScreen extends React.Component {
 
   */
   render() {
+    console.log(this.props.history.entries[1], "This is your back pathway");
     return (
       <View
         style={{

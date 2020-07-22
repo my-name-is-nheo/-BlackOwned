@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-import { View, Text, SafeAreaView, BackHandler } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  BackHandler,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 
 class AddScreen extends React.Component {
   constructor(props) {
@@ -24,8 +31,18 @@ class AddScreen extends React.Component {
 
   render() {
     return (
-      <View style={{ height: 100, width: 100, backGroundColor: "blue" }}>
-        <Text>This is Add Screen</Text>
+      <View>
+        <TouchableOpacity>
+          <View style={{ height: 100, width: 100, backGroundColor: "blue" }}>
+            <Text>This is Add Screen</Text>
+          </View>
+        </TouchableOpacity>
+        <Button
+          onPress={() => {
+            this.props.history.push("/register");
+          }}
+          title="Test Back"
+        />
       </View>
     );
   }

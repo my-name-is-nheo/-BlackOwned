@@ -15,7 +15,8 @@ import FavoriteScreen from "./screens/favoriteScreen";
 import SettingScreen from "./screens/settingScreen";
 import RegisterScreen from "./screens/registerScreen";
 import LoginScreen from "./screens/loginScreen";
-
+import BannedScreen from "./screens/bannedScreen";
+import { createStackNavigator } from "@react-navigation/stack";
 export default function App(props) {
   const [isHome, setIsHome] = useState(false);
   const [noLoad, setNoLoad] = useState(false);
@@ -110,6 +111,20 @@ export default function App(props) {
             render={(props) => {
               return (
                 <LoginScreen
+                  {...props}
+                  noTimeOut={noTimeOut}
+                  noLoad={createNoLoad}
+                  backOne={props.history.entries[0].pathname}
+                />
+              );
+            }}
+          ></Route>
+          <Route
+            path="/banned"
+            exact
+            render={(props) => {
+              return (
+                <BannedScreen
                   {...props}
                   noTimeOut={noTimeOut}
                   noLoad={createNoLoad}
