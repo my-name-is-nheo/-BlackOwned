@@ -43,6 +43,9 @@ class Search extends React.Component {
     };
 
     ipCall();
+    if (!this.props.backValue) {
+      this.props.updateHistory(this.props.history.location.pathname);
+    }
     BackHandler.addEventListener("hardwareBackPress", this.backOne);
   };
   componentWillUnmount = () => {
@@ -52,6 +55,9 @@ class Search extends React.Component {
   backOne = () => {
     this.props.noTimeOut();
     this.props.noLoad();
+    this.props.cameFromBack(true);
+    this.props.history.push(this.props.back);
+    this.props.fixHistory(this.props.back);
     this.props.history.push(this.props.backOne);
     return true;
   };
@@ -167,14 +173,14 @@ class Search extends React.Component {
     }
   };
 
-  // createList = (arr) => {
-  //   arr.map((element) => {
-  //     return <Button title={element.name}></Button>;
-  //   });
-  // };
+  /*
+Make it so that when a person is logged in, they can add search results to their 
+favorites.
 
-  //Let's get bizzy!
-  //Below is a list of black-owned businesses near you!
+Under the hood - whenever a person opens the app, their token is renewed for another
+30 days.  Check to see if presently token tells you date of creation.
+
+*/
 
   render() {
     return (

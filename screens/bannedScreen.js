@@ -8,20 +8,6 @@ class BannedScreen extends React.Component {
     this.state = { setting: null };
   }
 
-  componentDidMount = () => {
-    BackHandler.addEventListener("hardwareBackPress", this.backOne);
-  };
-  componentWillUnmount = () => {
-    BackHandler.removeEventListener("hardwareBackPress", this.backOne);
-  };
-
-  backOne = () => {
-    this.props.noTimeOut();
-    this.props.noLoad();
-    this.props.history.push(this.props.backOne);
-    return true;
-  };
-
   render() {
     return (
       <View style={{ height: 100, width: 100, backGroundColor: "blue" }}>

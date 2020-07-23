@@ -21,6 +21,11 @@ export default function App(props) {
   const [isHome, setIsHome] = useState(false);
   const [noLoad, setNoLoad] = useState(false);
   const [nto, setNto] = useState(false);
+  const [fromBack, setFromBack] = useState(false);
+  const [backHistory, setBackHistory] = useState({
+    presentLocation: "/",
+    historyArray: [],
+  });
   const createHome = function () {
     setIsHome(true);
   };
@@ -30,6 +35,29 @@ export default function App(props) {
   const noTimeOut = () => {
     setNto(true);
   };
+  const cameFromBack = (value) => {
+    setFromBack(value);
+  };
+
+  //{pl: /add, ha: [/add,/]}
+  const updateHistory = (history) => {
+    const updateObject = { ...backHistory };
+    updateObject.historyArray.unshift(updateObject.presentLocation);
+    updateObject.presentLocation = history;
+    console.log(
+      "updateHistory ran and here's your update object",
+      updateObject
+    );
+    setBackHistory(updateObject);
+  };
+  const fixHistory = (present) => {
+    const updateObject = { ...backHistory };
+    updateObject.presentLocation = present;
+    updateObject.historyArray.shift();
+    console.log("fixHistory ran and here's your update object", updateObject);
+    setBackHistory(updateObject);
+  };
+  // {presentUri: locationX, historyArray: [locationY, locationZ]}
 
   return (
     <NativeRouter>
@@ -42,9 +70,14 @@ export default function App(props) {
               return (
                 <Search
                   {...props}
+                  backValue={fromBack}
+                  cameFromBack={cameFromBack}
+                  updateHistory={updateHistory}
                   noTimeOut={noTimeOut}
                   noLoad={createNoLoad}
                   backOne={props.history.entries[0].pathname}
+                  back={backHistory.historyArray[0]}
+                  fixHistory={fixHistory}
                 />
               );
             }}
@@ -56,9 +89,14 @@ export default function App(props) {
               return (
                 <AddScreen
                   {...props}
+                  backValue={fromBack}
+                  updateHistory={updateHistory}
+                  cameFromBack={cameFromBack}
                   noTimeOut={noTimeOut}
                   noLoad={createNoLoad}
                   backOne={props.history.entries[0].pathname}
+                  back={backHistory.historyArray[0]}
+                  fixHistory={fixHistory}
                 />
               );
             }}
@@ -70,9 +108,14 @@ export default function App(props) {
               return (
                 <RegisterScreen
                   {...props}
+                  backValue={fromBack}
+                  updateHistory={updateHistory}
+                  cameFromBack={cameFromBack}
                   noTimeOut={noTimeOut}
                   noLoad={createNoLoad}
                   backOne={props.history.entries[0].pathname}
+                  back={backHistory.historyArray[0]}
+                  fixHistory={fixHistory}
                 />
               );
             }}
@@ -84,9 +127,14 @@ export default function App(props) {
               return (
                 <FavoriteScreen
                   {...props}
+                  backValue={fromBack}
+                  cameFromBack={cameFromBack}
+                  updateHistory={updateHistory}
                   noTimeOut={noTimeOut}
                   noLoad={createNoLoad}
                   backOne={props.history.entries[0].pathname}
+                  back={backHistory.historyArray[0]}
+                  fixHistory={fixHistory}
                 />
               );
             }}
@@ -98,9 +146,14 @@ export default function App(props) {
               return (
                 <SettingScreen
                   {...props}
+                  backValue={fromBack}
+                  cameFromBack={cameFromBack}
+                  updateHistory={updateHistory}
                   noTimeOut={noTimeOut}
                   noLoad={createNoLoad}
                   backOne={props.history.entries[0].pathname}
+                  back={backHistory.historyArray[0]}
+                  fixHistory={fixHistory}
                 />
               );
             }}
@@ -112,9 +165,14 @@ export default function App(props) {
               return (
                 <LoginScreen
                   {...props}
+                  backValue={fromBack}
+                  cameFromBack={cameFromBack}
+                  updateHistory={updateHistory}
                   noTimeOut={noTimeOut}
                   noLoad={createNoLoad}
                   backOne={props.history.entries[0].pathname}
+                  back={backHistory.historyArray[0]}
+                  fixHistory={fixHistory}
                 />
               );
             }}
@@ -141,6 +199,7 @@ export default function App(props) {
                 <HomeScreen
                   {...props}
                   noTimeOut={nto}
+                  cameFromBack={cameFromBack}
                   noLoad={noLoad}
                   isHome={createHome}
                   homeValue={isHome}

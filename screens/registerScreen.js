@@ -18,10 +18,6 @@ class RegisterScreen extends React.Component {
   constructor(props) {
     super(props);
     this.screenWidth = Math.round(Dimensions.get("window").width);
-    console.log(
-      this.props.history,
-      " this is props.history from registerScreen"
-    );
 
     this.state = {
       firstName: "",
@@ -71,6 +67,10 @@ class RegisterScreen extends React.Component {
   };
 
   componentDidMount = () => {
+    console.log(this.props.backValue, " This is the backvalue");
+    if (!this.props.backValue) {
+      this.props.updateHistory(this.props.history.location.pathname);
+    }
     BackHandler.addEventListener("hardwareBackPress", this.backOne);
   };
   componentWillUnmount = () => {
@@ -78,11 +78,11 @@ class RegisterScreen extends React.Component {
   };
 
   backOne = () => {
-    if (this.props.history) {
-    }
     this.props.noTimeOut();
     this.props.noLoad();
-    this.props.history.push(this.props.backOne);
+    this.props.cameFromBack(true);
+    this.props.history.push(this.props.back);
+    this.props.fixHistory(this.props.back);
     return true;
   };
   handleFirstName = (text) => {
@@ -113,6 +113,7 @@ class RegisterScreen extends React.Component {
       console.log("Got past storage");
       this.props.noTimeOut();
       setTimeout(() => {
+        this.props.cameFromBack(false);
         this.props.history.push("/");
       }, 500);
 
@@ -137,7 +138,6 @@ class RegisterScreen extends React.Component {
 
   */
   render() {
-    console.log(this.props.history.entries[1], "This is your back pathway");
     return (
       <View
         style={{

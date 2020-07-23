@@ -88,23 +88,32 @@ We need to be able to access settings, add a vibrator
   };
 
   const openSearchPage = () => {
+    props.cameFromBack(false);
     props.history.push("/search");
   };
   const openAdd = () => {
+    props.cameFromBack(false);
+
     props.history.push("/add");
   };
 
   const goTofavorites = () => {
+    props.cameFromBack(false);
+
     props.history.push("/favorites");
   };
   const goToSettings = () => {
+    props.cameFromBack(false);
+
     props.history.push("/settings");
   };
 
   const goToRegister = () => {
+    props.cameFromBack(false);
     props.history.push("/register");
   };
   const goToLogIn = () => {
+    props.cameFromBack(false);
     props.history.push("/logIn");
   };
 

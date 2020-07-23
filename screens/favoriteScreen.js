@@ -9,6 +9,13 @@ class FavoriteScreen extends React.Component {
   }
 
   componentDidMount = () => {
+    console.log("compound did mount ran");
+    console.log(this.props.backValue, " This is the backvalue");
+
+    if (!this.props.backValue) {
+      this.props.updateHistory(this.props.history.location.pathname);
+    }
+
     BackHandler.addEventListener("hardwareBackPress", this.backOne);
   };
   componentWillUnmount = () => {
@@ -18,6 +25,9 @@ class FavoriteScreen extends React.Component {
   backOne = () => {
     this.props.noTimeOut();
     this.props.noLoad();
+    this.props.cameFromBack(true);
+    this.props.history.push(this.props.back);
+    this.props.fixHistory(this.props.back);
     this.props.history.push(this.props.backOne);
     return true;
   };

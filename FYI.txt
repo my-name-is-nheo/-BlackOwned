@@ -14,3 +14,27 @@ http://192.168.43.49:5000
 
 padding top for android/ios
 paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+
+  componentDidMount = () => {
+    console.log("compound did mount ran");
+    console.log(this.props.backValue, " This is the backvalue");
+
+    if (!this.props.backValue) {
+      this.props.updateHistory(this.props.history.location.pathname);
+    }
+
+    BackHandler.addEventListener("hardwareBackPress", this.backOne);
+  };
+  componentWillUnmount = () => {
+    BackHandler.removeEventListener("hardwareBackPress", this.backOne);
+  };
+
+  backOne = () => {
+    this.props.noTimeOut();
+    this.props.noLoad();
+    this.props.cameFromBack(true);
+    this.props.history.push(this.props.back);
+    this.props.fixHistory(this.props.back);
+    this.props.history.push(this.props.backOne);
+    return true;
+  };

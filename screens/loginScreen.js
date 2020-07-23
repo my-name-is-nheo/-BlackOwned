@@ -51,6 +51,13 @@ class LoginScreen extends React.Component {
   };
 
   componentDidMount = () => {
+    console.log("compound did mount ran");
+    console.log(this.props.backValue, " This is the backvalue");
+
+    if (!this.props.backValue) {
+      this.props.updateHistory(this.props.history.location.pathname);
+    }
+
     BackHandler.addEventListener("hardwareBackPress", this.backOne);
   };
   componentWillUnmount = () => {
@@ -60,6 +67,9 @@ class LoginScreen extends React.Component {
   backOne = () => {
     this.props.noTimeOut();
     this.props.noLoad();
+    this.props.cameFromBack(true);
+    this.props.history.push(this.props.back);
+    this.props.fixHistory(this.props.back);
     this.props.history.push(this.props.backOne);
     return true;
   };
@@ -86,18 +96,19 @@ class LoginScreen extends React.Component {
       setTimeout(() => {
         this.props.history.push("/");
       }, 500);
-      //FIGURE OUT WHY IT IS NOT LOGGING IN WITH CORRECT DATA!!!!!!!
     } catch (err) {
       if (err.response.data === "banned") {
+        this.props.cameFromBack(false);
+
         this.props.history.push("/banned");
       }
       console.log(err.response.data, "axios post failed");
     }
   };
   registerClick = () => {
+    this.props.cameFromBack(false);
     this.props.history.push("/register");
   };
-  goBackToPreviousScreen = () => {};
 
   render() {
     return (
