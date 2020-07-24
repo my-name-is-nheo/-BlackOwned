@@ -51,10 +51,9 @@ We need to be able to access settings, add a vibrator
   });
 
   const greeting = () => {
-    console.log(token);
     if (token) {
       const untokener = jwt_decode(token);
-      console.log(untokener, " this is untokener");
+
       return (
         <TouchableOpacity style={styles.greetingButton}>
           <View>
@@ -66,7 +65,6 @@ We need to be able to access settings, add a vibrator
   };
 
   const logOut = () => {
-    [];
     if (token) {
       return (
         <View style={{ left: 50 }}>
@@ -199,6 +197,7 @@ We need to be able to access settings, add a vibrator
           source={require("../assets/images/women.png")}
           style={{ height: "100%", width: "100%" }}
         >
+          {greeting()}
           {!props.homeValue && (
             <View style={{ left: 50 }}>
               <TouchableOpacity style={styles.circularButton}>

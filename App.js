@@ -44,19 +44,15 @@ export default function App(props) {
     const updateObject = { ...backHistory };
     updateObject.historyArray.unshift(updateObject.presentLocation);
     updateObject.presentLocation = history;
-    console.log(
-      "updateHistory ran and here's your update object",
-      updateObject
-    );
+
     setBackHistory(updateObject);
   };
   const fixHistory = (present) => {
     const updateObject = { ...backHistory };
     updateObject.presentLocation = present;
     updateObject.historyArray.shift();
-    console.log("fixHistory ran and here's your update object", updateObject);
-    setBackHistory(updateObject);
   };
+
   // {presentUri: locationX, historyArray: [locationY, locationZ]}
 
   return (
