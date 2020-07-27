@@ -38,3 +38,6 @@ paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     this.props.history.push(this.props.backOne);
     return true;
   };
+
+
+New Idea - Create currated lists as tradeable starter kits for regional patronization of local businesses

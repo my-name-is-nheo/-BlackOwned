@@ -5,7 +5,7 @@ export async function ip() {
   try {
     console.log("entered try");
     var ipAddress = await axios.get("https://api.ipify.org");
-    console.log(ipAddress);
+
     return ipAddress.data;
   } catch (err) {
     console.log(err, "IpTest Failed in ipService.js");

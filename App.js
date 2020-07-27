@@ -26,6 +26,7 @@ export default function App(props) {
     presentLocation: "/",
     historyArray: [],
   });
+  const [heartPressed, setHeartPressed] = useState({});
   const createHome = function () {
     setIsHome(true);
   };
@@ -52,6 +53,14 @@ export default function App(props) {
     updateObject.presentLocation = present;
     updateObject.historyArray.shift();
   };
+  const handleHeartPress = (i) => {
+    const newHeartPressed = { ...heartPressed };
+    if (!newHeartPressed[i]) {
+      newHeartPressed[i] = false;
+    }
+    newHeartPressed[i] = !newHeartPressed[i];
+    setHeartPressed(newHeartPressed);
+  };
 
   // {presentUri: locationX, historyArray: [locationY, locationZ]}
 
@@ -66,6 +75,8 @@ export default function App(props) {
               return (
                 <Search
                   {...props}
+                  heartPressed={heartPressed}
+                  handleHeartPress={handleHeartPress}
                   backValue={fromBack}
                   cameFromBack={cameFromBack}
                   updateHistory={updateHistory}

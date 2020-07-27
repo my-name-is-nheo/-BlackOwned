@@ -17,6 +17,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import HyperLink from "./../services/urlService";
 import goToUrl from "../services/goToUrl";
 import { WebBrowserResultType } from "expo-web-browser";
+import { Avatar } from "react-native-elements";
+import saveToFavorites from "./../services/saveToFavorites";
 
 class Search extends React.Component {
   constructor(props) {
@@ -33,7 +35,7 @@ class Search extends React.Component {
         ); // `http://ip-api.com/json/${ipResult}`
         const currentCity = userLocation.data.city;
         const businesses = await axios.get(tokens.samApi);
-        console.log(businesses, "here be the biz");
+        // console.log(businesses, "here be the biz");
         const groomedArray = this.usefulInfo(businesses.data.results);
         const nearbyBusinesses = this.searchAroundMe(groomedArray, currentCity);
         this.setState({ nearbyBusinesses });
@@ -61,7 +63,9 @@ class Search extends React.Component {
     this.props.history.push(this.props.backOne);
     return true;
   };
-
+  handleHeartPress = (i) => {
+    this.props.handleHeartPress(i);
+  };
   listResults = (input) => {
     if (input === null) {
       return (
@@ -77,19 +81,45 @@ class Search extends React.Component {
           key={i}
           style={{
             alignItems: "center",
+            marginTop: 10,
           }}
         >
-          <Text
-            onPress={this.googleSearch}
-            value={place.name}
-            style={{
-              color: "white",
-              textDecorationLine: "underline",
-              lineHeight: 60,
-            }}
+          <View
+            style={{ flexDirection: "row", borderWidth: 0.4, paddingLeft: 15 }}
           >
-            {place.name}
-          </Text>
+            <Text
+              onPress={this.googleSearch}
+              value={place.name}
+              style={{
+                color: "white",
+                textDecorationLine: "underline",
+                lineHeight: 60,
+              }}
+            >
+              {place.name}
+            </Text>
+            <Avatar
+              onPress={() => {
+                this.handleHeartPress(i);
+                setTimeout(async () => {
+                  if (this.props.heartPressed[i]) {
+                    const payload = {
+                      ...place,
+                      heartPressed: this.props.heartPressed[i],
+                    };
+                    await saveToFavorites(payload);
+                  }
+                }, 1000);
+              }}
+              rounded
+              icon={{
+                name:
+                  this.props.heartPressed[i] === true
+                    ? "favorite"
+                    : "favorite-border",
+              }}
+            />
+          </View>
         </View>
       );
     });
@@ -118,6 +148,13 @@ class Search extends React.Component {
     }
     return results;
   };
+
+  //press and activate the heart
+  //At the same time, we'll save a datapayload about our liked item to the back
+  //end
+  //{name, how many likes or dislikes, location, google search link}
+  //favorite page , get request to mongo container
+
   searchAroundMe = (arr, ipCity) => {
     const lcCity = ipCity.toLowerCase();
     const newArr = [];
@@ -133,7 +170,7 @@ class Search extends React.Component {
   evaluateListReturn = (callback) => {
     const results = callback(this.state.nearbyBusinesses);
     if (Array.isArray(results)) {
-      return 3;
+      return 43;
     } else {
       return 100;
     }
