@@ -8,6 +8,8 @@ import {
   Button,
   StatusBar,
   TouchableOpacity,
+  Dimensions,
+  ScrollView,
 } from "react-native";
 import axios from "axios";
 import { ip } from "../services/ipService";
@@ -19,26 +21,74 @@ import goToUrl from "../services/goToUrl";
 import { WebBrowserResultType } from "expo-web-browser";
 import { Avatar } from "react-native-elements";
 import saveToFavorites from "./../services/saveToFavorites";
+import MapView, { Marker } from "react-native-maps";
+// import Marker from "react-native-maps";
+import addLatShrugged from "./../services/addLatShrugged";
+import getZipcodes from "./../services/getZipcodes";
+const Promise = require("promise");
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { nearbyBusinesses: null };
+    this.state = {
+      nearbyBusinesses: null,
+      markers: [],
+      currentCoordinates: null,
+    };
+    this.width = Math.round(Dimensions.get("window").width);
+    this.height = Math.round(Dimensions.get("window").height);
   }
 
   componentDidMount = () => {
     const ipCall = async () => {
       try {
+        // const placeDetails = await axios.get(
+        //   "https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJB_J1KUvTD4gR0yzGC8PfxHU&key=AIzaSyAqqM6FVb05H_mzyYnGXBnekMg4SamG1ds"
+        // );
+        // console.log(
+        //   placeDetails.data,
+        //   " this is place details on line 41 of searchscreen.js"
+        // );
+        //   "https://api.data.gov/sam/v3/registrations?qterms=minorityOwned:OY+AND+samAddress.zip:(02139,12140)&api_key=${token.samApi}&start=1&length=1000",
         const ipResult = await ip();
         var userLocation = await axios.get(
-          `http://ip-api.com/json/38.106.217.167` // will eventually load
-        ); // `http://ip-api.com/json/${ipResult}`
-        const currentCity = userLocation.data.city;
-        const businesses = await axios.get(tokens.samApi);
-        // console.log(businesses, "here be the biz");
+          // `http://ip-api.com/json/${ipResult}`
+          `http://ip-api.com/json/65.96.175.95` // will eventually load
+        ); //
+
+        const userCoordinates = {
+          latitude: userLocation.data.lat,
+          longitude: userLocation.data.lon,
+        };
+        const currentZipcode = userLocation.data.zip;
+
+        const zipCodes = await getZipcodes(currentZipcode, 20);
+
+        const zipString = this.getZipString(zipCodes.zip_codes);
+        const businesses = await axios.get(
+          `https://api.data.gov/sam/v3/registrations?qterms=minorityOwned:OY+AND+samAddress.zip:${zipString}&api_key=${tokens.samApi}&start=1&length=1000`
+        );
+        // console.log(businesses.data, "this is newApi object")
         const groomedArray = this.usefulInfo(businesses.data.results);
-        const nearbyBusinesses = this.searchAroundMe(groomedArray, currentCity);
-        this.setState({ nearbyBusinesses });
+        // console.log(groomedArray, "this should be groomed");
+
+        // console.log(
+        //   groomedArray,
+        //   " this is groomedArray, updated with full address"
+        // );
+        const markers = await addLatShrugged(groomedArray);
+        Promise.all(markers).then((item) => {
+          console.log(
+            nearbyBusinesses,
+            currentCoordinates,
+            "can we access bus and coord from Promise"
+          );
+          this.setState({
+            markers: item,
+            nearbyBusinesses: nearbyBusinesses,
+            currentCoordinates: userCoordinates,
+          });
+        });
       } catch (error) {
         console.log(error, "componentDidMount error on searchScreen.js");
       }
@@ -155,16 +205,16 @@ class Search extends React.Component {
   //{name, how many likes or dislikes, location, google search link}
   //favorite page , get request to mongo container
 
-  searchAroundMe = (arr, ipCity) => {
-    const lcCity = ipCity.toLowerCase();
-    const newArr = [];
-    for (var index = 0; index < arr.length; index++) {
-      const arrCityName = arr[index].city.toLowerCase();
-      if (arrCityName === lcCity) {
-        newArr.push(arr[index]);
+  getZipString = (zipCodeArray) => {
+    var zipString = "(";
+    for (var index = zipCodeArray.length - 1; index > 0; index--) {
+      zipString += zipCodeArray[index].zip_code;
+      if (index > 1) {
+        zipString += ",";
       }
     }
-    return newArr;
+    zipString += ")";
+    return zipString;
   };
 
   evaluateListReturn = (callback) => {
@@ -180,9 +230,11 @@ class Search extends React.Component {
     const mapInfo = arr.map((element) => {
       let infoObj = {
         name: element.legalBusinessName,
+        address: element.samAddress.line1,
         city: element.samAddress.city,
         zipcode: element.samAddress.zip,
       };
+
       return infoObj;
     });
     return mapInfo;
@@ -226,8 +278,9 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
           paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
           backgroundColor: "#fc5c65",
           // justifyContent: "center",
-
+          flexDirection: "column",
           alignContent: "center",
+
           paddingLeft: 0,
           paddingRight: 0,
           alignItems: "center",
@@ -238,11 +291,10 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
         <View
           style={{
             backgroundColor: "#fc5c65",
-            top: 40,
             backgroundColor: "white",
-            height: "20%",
             width: "100%",
             borderRadius: 30,
+            padding: 10,
             alignContent: "center",
             alignItems: "center",
           }}
@@ -252,19 +304,65 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
           </Text>
 
           <View>
-            <Text style={{ fontSize: 30 }}>👨🏾‍🦲👩🏾‍🦰👩🏿‍🦱👵🏾🧑🏾‍🧓🏾👴🏾👨🏾‍🦱👱🏾👩🏾‍🦲</Text>
-            <Text style={{ left: 10, fontSize: 16, fontWeight: "600" }}>
+            <Text style={{ fontSize: 28 }}>👨🏾‍🦲👩🏾‍🦰👩🏿‍🦱👵🏾🧑🏾‍🧓🏾👴🏾👨🏾‍🦱👱🏾👩🏾‍🦲</Text>
+            <Text style={{ padding: 2.5, fontSize: 16, fontWeight: "600" }}>
               Below is a list of black-owned businesses near you!
             </Text>
           </View>
         </View>
+
         <View
           style={{
+            width: "100%",
+            height: "50%",
+          }}
+        >
+          {this.state.currentCoordinates && (
+            <MapView
+              provider="google"
+              style={{
+                position: "relative",
+                top: 0,
+                left: 0,
+                height: this.height / 2,
+                width: this.width,
+              }}
+              initialRegion={{
+                latitude: this.state.currentCoordinates.latitude,
+                longitude: this.state.currentCoordinates.longitude,
+                latitudeDelta: 0.922,
+                longitudeDelta: 0.421,
+              }}
+            >
+              {this.state.markers.map((marker) => {
+                return (
+                  <Marker
+                    coordinate={{
+                      latitude: marker.markers.lat,
+                      longitude: marker.markers.lng,
+                    }}
+                    title={marker.name}
+                    description={marker.place_id}
+                  />
+                );
+              })}
+            </MapView>
+          )}
+        </View>
+
+        <ScrollView
+          style={{
             marginTop: this.evaluateListReturn(this.listResults),
+            width: "100%",
           }}
         >
           {this.listResults(this.state.nearbyBusinesses)}
-        </View>
+          {this.listResults(this.state.nearbyBusinesses)}
+          {this.listResults(this.state.nearbyBusinesses)}
+          {this.listResults(this.state.nearbyBusinesses)}
+          {this.listResults(this.state.nearbyBusinesses)}
+          {this.listResults(this.state.nearbyBusinesses)}
+        </ScrollView>
       </View>
     );
   }

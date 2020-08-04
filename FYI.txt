@@ -39,5 +39,18 @@ paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     return true;
   };
 
+   {/* {
+              this.state.markers
+              //this.state.markers.map((marker) => {
+              //console.log(marker, " this is marker");
+              // return (
+              //   <Marker
+              //     coordinate={marker.lat + ", " + marker.lng}
+              //     title={marker.name}
+              //     description={marker.name}
+              //   />
+              // );
+              //})
+            } */}
 
 New Idea - Create currated lists as tradeable starter kits for regional patronization of local businesses
