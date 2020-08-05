@@ -1,25 +1,58 @@
 import axios from "axios";
 import token from "../token";
-async function addLatShrugged(arr) {
-  return arr.map(async (item, i) => {
-    try {
-      const address = item.address + " " + item.city + " " + item.zipcode;
-      // console.log(address, " this shoud look like a normal address ");
-      const uriEncodedAddress = encodeURI(address);
+async function addLatShrugged(arr, userCoordinates) {
+  const requests = [];
 
-      const googleMapApi = await axios.get(
-        `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${uriEncodedAddress}&inputtype=textquery&fields=photos,formatted_address,name,place_id,geometry,opening_hours,rating&locationbias=circle:2000@47.6918452,-122.2226413&key=${token.googleApi}`
+  arr.map((item) => {
+    const address = item.address + " " + item.city + " " + item.zipcode;
+    const uriEncodedAddress = encodeURI(address);
+    //limit requests for now so things are faster
+    if (requests.length < 10)
+      requests.push(
+        axios.get(
+          `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${uriEncodedAddress}&inputtype=textquery&types=establishment&fields=photos,formatted_address,name,place_id,geometry,opening_hours,rating&components=country:us&locationbias=circle:500@${userCoordinates.latitude},${userCoordinates.longitude}&key=${token.googleApi}`
+        )
       );
-      // console.log(googleMapApi.data, "this is what we're returning in gmap");
-      const returnObject = {};
-      returnObject.name = item.name;
-      returnObject.place_id = googleMapApi.data.candidates[0].place_id;
-      returnObject.markers = googleMapApi.data.candidates[0].geometry.location;
-      return returnObject;
-    } catch (error) {
-      console.log(error, "This is your error from addLatShrugged.js");
-    }
   });
+  var markers = [];
+  return await axios
+    .all(requests)
+    .then(
+      axios.spread((...responses) => {
+        responses.forEach((r) => {
+          if (r.data.candidates.length <= 0) {
+            console.log("cannot find place ", r); // new Error(`HTTP error! status: ${item.status}`);
+          } else {
+            markers.push({
+              name: r.data.candidates[0].name,
+              place_id: r.data.candidates[0].place_id,
+              lat: r.data.candidates[0].geometry.location.lat,
+              lng: r.data.candidates[0].geometry.location.lng,
+            });
+          }
+        });
+        return markers;
+      })
+    )
+    .catch(function (error) {
+      console.log("ERROR BETCHES", error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+      }
+      console.log(error.config);
+    });
 }
 
 export default addLatShrugged;

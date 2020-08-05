@@ -21,10 +21,11 @@ import goToUrl from "../services/goToUrl";
 import { WebBrowserResultType } from "expo-web-browser";
 import { Avatar } from "react-native-elements";
 import saveToFavorites from "./../services/saveToFavorites";
-import MapView, { Marker } from "react-native-maps";
 // import Marker from "react-native-maps";
 import addLatShrugged from "./../services/addLatShrugged";
 import getZipcodes from "./../services/getZipcodes";
+import { Item } from "native-base";
+import Map from "../components/Map";
 const Promise = require("promise");
 
 class Search extends React.Component {
@@ -62,33 +63,20 @@ class Search extends React.Component {
         };
         const currentZipcode = userLocation.data.zip;
 
-        const zipCodes = await getZipcodes(currentZipcode, 20);
-
-        const zipString = this.getZipString(zipCodes.zip_codes);
+        const zipCodes = await getZipcodes(currentZipcode, 2);
+        const zipString = "02139"; //this.getZipString(zipCodes.zip_codes);
         const businesses = await axios.get(
           `https://api.data.gov/sam/v3/registrations?qterms=minorityOwned:OY+AND+samAddress.zip:${zipString}&api_key=${tokens.samApi}&start=1&length=1000`
         );
-        // console.log(businesses.data, "this is newApi object")
         const groomedArray = this.usefulInfo(businesses.data.results);
-        // console.log(groomedArray, "this should be groomed");
 
-        // console.log(
-        //   groomedArray,
-        //   " this is groomedArray, updated with full address"
-        // );
-        const markers = await addLatShrugged(groomedArray);
-        Promise.all(markers).then((item) => {
-          console.log(
-            nearbyBusinesses,
-            currentCoordinates,
-            "can we access bus and coord from Promise"
-          );
-          this.setState({
-            markers: item,
-            nearbyBusinesses: nearbyBusinesses,
-            currentCoordinates: userCoordinates,
-          });
+        this.setState({
+          currentCoordinates: userCoordinates,
+          nearbyBusinesses: groomedArray,
         });
+
+        const markers = await addLatShrugged(groomedArray, userCoordinates);
+        this.setState({ markers: markers });
       } catch (error) {
         console.log(error, "componentDidMount error on searchScreen.js");
       }
@@ -318,35 +306,10 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
           }}
         >
           {this.state.currentCoordinates && (
-            <MapView
-              provider="google"
-              style={{
-                position: "relative",
-                top: 0,
-                left: 0,
-                height: this.height / 2,
-                width: this.width,
-              }}
-              initialRegion={{
-                latitude: this.state.currentCoordinates.latitude,
-                longitude: this.state.currentCoordinates.longitude,
-                latitudeDelta: 0.922,
-                longitudeDelta: 0.421,
-              }}
-            >
-              {this.state.markers.map((marker) => {
-                return (
-                  <Marker
-                    coordinate={{
-                      latitude: marker.markers.lat,
-                      longitude: marker.markers.lng,
-                    }}
-                    title={marker.name}
-                    description={marker.place_id}
-                  />
-                );
-              })}
-            </MapView>
+            <Map
+              markers={this.state.markers}
+              currentCoordinates={this.state.currentCoordinates}
+            />
           )}
         </View>
 
@@ -356,11 +319,6 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
             width: "100%",
           }}
         >
-          {this.listResults(this.state.nearbyBusinesses)}
-          {this.listResults(this.state.nearbyBusinesses)}
-          {this.listResults(this.state.nearbyBusinesses)}
-          {this.listResults(this.state.nearbyBusinesses)}
-          {this.listResults(this.state.nearbyBusinesses)}
           {this.listResults(this.state.nearbyBusinesses)}
         </ScrollView>
       </View>
