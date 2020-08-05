@@ -1,9 +1,14 @@
 import * as React from "react";
 import MapView, { Marker } from "react-native-maps";
+import Colors from "../constants/Colors";
 
 export default function Map(props) {
   return (
     <MapView
+      zoomControlEnabled
+      showsUserLocation
+      zoomEnabled
+      loadingEnabled
       provider="google"
       style={{
         position: "relative",
@@ -15,11 +20,12 @@ export default function Map(props) {
       initialRegion={{
         latitude: props.currentCoordinates.latitude,
         longitude: props.currentCoordinates.longitude,
-        latitudeDelta: 0.922,
-        longitudeDelta: 0.421,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
       }}
     >
       {props.markers.map((marker) => {
+        console.log(marker, "check here for address");
         return (
           <Marker
             coordinate={{
@@ -27,10 +33,19 @@ export default function Map(props) {
               longitude: marker.lng,
             }}
             title={marker.name}
-            description={marker.place_id}
+            description={marker.address}
           />
         );
       })}
+      <Marker
+        coordinate={{
+          latitude: props.currentCoordinates.latitude,
+          longitude: props.currentCoordinates.longitude,
+        }}
+        pinColor={"blue"}
+        title={"current location"}
+        description={"current location"}
+      />
     </MapView>
   );
 }

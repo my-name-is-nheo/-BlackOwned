@@ -64,9 +64,9 @@ class Search extends React.Component {
         const currentZipcode = userLocation.data.zip;
 
         const zipCodes = await getZipcodes(currentZipcode, 2);
-        const zipString = "02139"; //this.getZipString(zipCodes.zip_codes);
+        const zipString = this.getZipString(zipCodes.zip_codes);
         const businesses = await axios.get(
-          `https://api.data.gov/sam/v3/registrations?qterms=minorityOwned:OY+AND+samAddress.zip:${zipString}&api_key=${tokens.samApi}&start=1&length=1000`
+          `https://api.data.gov/sam/v3/registrations?qterms=samAddress.zip:${zipString}+AND+minorityOwned:true&OY&api_key=${tokens.samApi}&start=1&length=1000`
         );
         const groomedArray = this.usefulInfo(businesses.data.results);
 
@@ -260,6 +260,7 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
 */
 
   render() {
+    // console.log(this.state.markers, "this is state.markers from searchScreen");
     return (
       <View
         style={{
