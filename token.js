@@ -5,5 +5,6 @@ const tokens = {
   zipCodeApi:
     "nFVyojfwCzv2AzfsErVrGbt18BSvtVbLD54bKxb8HJ0uXdUpeXzs56hKnB6M910g",
   googleApi: "AIzaSyAqqM6FVb05H_mzyYnGXBnekMg4SamG1ds",
+  backendApi: "http://192.168.43.49:5000/api",
 };
 export default tokens;

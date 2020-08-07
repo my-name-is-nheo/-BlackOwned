@@ -54,3 +54,33 @@ paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
             } */}
 
 New Idea - Create currated lists as tradeable starter kits for regional patronization of local businesses
+
+
+
+
+  /*
+  problem facing here.
+  1. geolocator is very accurate. you have to enable location on expo cli as well and will update to your location. (defaults to sanfrancisco if you don't)
+  2. state is updated with user's coordinates as shown in line 63
+  3. checked to make sure when the coordinates enter addLatShrugged on line 103-16, but we're sending in the default location to addLatShrugged
+    */
+    var options = {
+      enableHighAccuracy: true,
+      maximumAge: 60000,
+      timeout: 2000,
+    };
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        // console.log(position, "this is position");
+        var userCurrentLocation = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+        console.log(userCurrentLocation, " this is user's currentlocation"); //<==== works fine
+        this.setState({ currentCoordinates: userCurrentLocation });
+      },
+      (error) => {
+        console.log("navigator.geolocation ain't working");
+      },
+      options
+    );

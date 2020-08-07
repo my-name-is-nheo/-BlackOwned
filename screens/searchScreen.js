@@ -25,7 +25,7 @@ import saveToFavorites from "./../services/saveToFavorites";
 import addLatShrugged from "./../services/addLatShrugged";
 import getZipcodes from "./../services/getZipcodes";
 import { Item } from "native-base";
-import Map from "../components/Map";
+//import Map from "../components/Map";
 const Promise = require("promise");
 
 class Search extends React.Component {
@@ -306,12 +306,13 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
             height: "50%",
           }}
         >
+          {/* 
           {this.state.currentCoordinates && (
             <Map
-              markers={this.state.markers}
-              currentCoordinates={this.state.currentCoordinates}
+            markers={this.state.markers}
+            currentCoordinates={this.state.currentCoordinates}
             />
-          )}
+            )} */}
         </View>
 
         <ScrollView
