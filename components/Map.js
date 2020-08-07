@@ -25,9 +25,11 @@ export default function Map(props) {
       }}
     >
       {props.markers.map((marker) => {
-        console.log(marker, "check here for address");
         return (
           <Marker
+            onPress={() => {
+              props.setOverlay(marker);
+            }}
             coordinate={{
               latitude: marker.lat,
               longitude: marker.lng,
@@ -38,6 +40,7 @@ export default function Map(props) {
         );
       })}
       <Marker
+        onPress={props.setOverlay}
         coordinate={{
           latitude: props.currentCoordinates.latitude,
           longitude: props.currentCoordinates.longitude,

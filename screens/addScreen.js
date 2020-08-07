@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import {
   View,
   Text,
@@ -47,6 +46,7 @@ class AddScreen extends React.Component {
             <Text>This is Add Screen</Text>
           </View>
         </TouchableOpacity>
+
         <Button
           onPress={() => {
             this.props.cameFromBack(false);

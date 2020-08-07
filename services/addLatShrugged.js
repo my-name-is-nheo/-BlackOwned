@@ -24,8 +24,6 @@ async function addLatShrugged(arr, userCoordinates) {
           if (r.data.candidates.length <= 0) {
             console.log("cannot find place ", r.data); // new Error(`HTTP error! status: ${item.status}`);
           } else {
-            console.log("r data", r.data.candidates[0]);
-
             markers.push({
               name: r.data.candidates[0].name,
               place_id: r.data.candidates[0].place_id,
@@ -35,7 +33,6 @@ async function addLatShrugged(arr, userCoordinates) {
             });
           }
         });
-        console.log(markers, "this is markers");
         return markers;
       })
     )

@@ -1,32 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { ipService } from "../services/ipService";
 import {
   View,
   Text,
-  SafeAreaView,
   BackHandler,
-  Button,
   StatusBar,
-  TouchableOpacity,
   Dimensions,
   ScrollView,
 } from "react-native";
 import axios from "axios";
 import { ip } from "../services/ipService";
-import businessSearch from "../services/businessSearch";
 import tokens from "../token";
 import { MaterialIcons } from "@expo/vector-icons";
 import HyperLink from "./../services/urlService";
 import goToUrl from "../services/goToUrl";
-import { WebBrowserResultType } from "expo-web-browser";
 import { Avatar } from "react-native-elements";
 import saveToFavorites from "./../services/saveToFavorites";
 // import Marker from "react-native-maps";
 import addLatShrugged from "./../services/addLatShrugged";
 import getZipcodes from "./../services/getZipcodes";
-import { Item } from "native-base";
 import Map from "../components/Map";
-const Promise = require("promise");
+import OverlayTest from "../components/Overlay";
+import token from "../token";
+import SendMail from "./../components/SendMail";
 
 class Search extends React.Component {
   constructor(props) {
@@ -35,6 +30,13 @@ class Search extends React.Component {
       nearbyBusinesses: null,
       markers: [],
       currentCoordinates: null,
+      setOverlay: false,
+      actionVisible: false,
+      locationName: "",
+      address: "",
+      imgUri: "",
+      phoneNumber: "",
+      openNow: "",
     };
     this.width = Math.round(Dimensions.get("window").width);
     this.height = Math.round(Dimensions.get("window").height);
@@ -43,6 +45,7 @@ class Search extends React.Component {
   componentDidMount = () => {
     const ipCall = async () => {
       try {
+        console.log("ENTERING IP CALL!!!!");
         // const placeDetails = await axios.get(
         //   "https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJB_J1KUvTD4gR0yzGC8PfxHU&key=AIzaSyAqqM6FVb05H_mzyYnGXBnekMg4SamG1ds"
         // );
@@ -51,11 +54,13 @@ class Search extends React.Component {
         //   " this is place details on line 41 of searchscreen.js"
         // );
         //   "https://api.data.gov/sam/v3/registrations?qterms=minorityOwned:OY+AND+samAddress.zip:(02139,12140)&api_key=${token.samApi}&start=1&length=1000",
-        const ipResult = await ip();
+        // const ipResult = await ip();
         var userLocation = await axios.get(
-          // `http://ip-api.com/json/${ipResult}`
-          `http://ip-api.com/json/65.96.175.95` // will eventually load
+          `http://ip-api.com/json/65.96.175.95`
         ); //
+        // will eventually load
+        // `http://ip-api.com/json/${ipResult}`
+        console.log("GETTING PAST THE LOCATION");
 
         const userCoordinates = {
           latitude: userLocation.data.lat,
@@ -249,15 +254,32 @@ class Search extends React.Component {
       console.log(err, "This is error from googleSearch in searchScreen.js");
     }
   };
-
-  /*
-Make it so that when a person is logged in, they can add search results to their 
-favorites.
-
-Under the hood - whenever a person opens the app, their token is renewed for another
-30 days.  Check to see if presently token tells you date of creation.
-
-*/
+  handleActionButton = () => {
+    this.setState({ actionVisible: true, setOverlay: false });
+  };
+  handleSetOverlay = async (marker) => {
+    const placeDetails = await axios.get(
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${marker.place_id}&key=${token.googleApi}`
+    );
+    console.log(placeDetails.data.result.opening_hours, "MARKER ENDS");
+    this.setState({
+      setOverlay: true,
+      locationName: marker.name,
+      address: marker.address,
+      imgUri: placeDetails.data.result.icon,
+      phoneNumber: placeDetails.data.result.formatted_phone_number,
+      openNow:
+        placeDetails.data.result.opening_hours !== undefined
+          ? placeDetails.data.result.opening_hours
+          : "",
+    });
+  };
+  handleNotVisible = () => {
+    this.setState({ actionVisible: false });
+  };
+  removeOverlay = () => {
+    this.setState({ setOverlay: false });
+  };
 
   render() {
     // console.log(this.state.markers, "this is state.markers from searchScreen");
@@ -308,11 +330,35 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
         >
           {this.state.currentCoordinates && (
             <Map
+              setOverlay={this.handleSetOverlay}
               markers={this.state.markers}
               currentCoordinates={this.state.currentCoordinates}
             />
           )}
         </View>
+        <OverlayTest
+          address={this.state.address}
+          locationName={this.state.locationName}
+          removeOverlay={this.removeOverlay}
+          visible={this.state.setOverlay}
+          style={{ marginTop: 200 }}
+          imgUri={this.state.imgUri}
+          phoneNumber={this.state.phoneNumber}
+          openNow={this.state.openNow}
+          handleActionButton={this.handleActionButton}
+        />
+        <SendMail
+          address={"This approach works"}
+          locationName={this.state.locationName}
+          removeOverlay={this.removeOverlay}
+          visible={this.state.actionVisible}
+          notVisible={this.handleNotVisible}
+          style={{ marginTop: 200 }}
+          imgUri={this.state.imgUri}
+          phoneNumber={this.state.phoneNumber}
+          openNow={this.state.openNow}
+          handleActionButton={this.handleActionButton}
+        />
 
         <ScrollView
           style={{
