@@ -1,0 +1,404 @@
+MARKER STARTS
+Object {
+  "html_attributions": Array [],
+  "result": Object {
+    "address_components": Array [
+      Object {
+        "long_name": "105a",
+        "short_name": "105a",
+        "types": Array [
+          "subpremise",
+        ],
+      },
+      Object {
+        "long_name": "2380",
+        "short_name": "2380",
+        "types": Array [
+          "street_number",
+        ],
+      },
+      Object {
+        "long_name": "Massachusetts Avenue",
+        "short_name": "Massachusetts Ave",
+        "types": Array [
+          "route",
+        ],
+      },
+      Object {
+        "long_name": "North Cambridge",
+        "short_name": "North Cambridge",
+        "types": Array [
+          "neighborhood",
+          "political",
+        ],
+      },
+      Object {
+        "long_name": "Cambridge",
+        "short_name": "Cambridge",
+        "types": Array [
+          "locality",
+          "political",
+        ],
+      },
+      Object {
+        "long_name": "Middlesex County",
+        "short_name": "Middlesex County",
+        "types": Array [
+          "administrative_area_level_2",
+          "political",
+        ],
+      },
+      Object {
+        "long_name": "Massachusetts",
+        "short_name": "MA",
+        "types": Array [
+          "administrative_area_level_1",
+          "political",
+        ],
+      },
+      Object {
+        "long_name": "United States",
+        "short_name": "US",
+        "types": Array [
+          "country",
+          "political",
+        ],
+      },
+      Object {
+        "long_name": "02140",
+        "short_name": "02140",
+        "types": Array [
+          "postal_code",
+        ],
+      },
+    ],
+    "adr_address": "<span class=\"street-address\">2380 Massachusetts Ave #105a</span>, <span class=\"locality\">Cambridge</span>, <span class=\"region\">MA</span> <span class=\"postal-code\">02140</span>, <span class=\"country-name\">USA</span>",
+    "business_status": "OPERATIONAL",
+    "formatted_address": "2380 Massachusetts Ave #105a, Cambridge, MA 02140, USA",
+    "formatted_phone_number": "(617) 545-4361",
+    "geometry": Object {
+      "location": Object {
+        "lat": 42.3966312,
+        "lng": -71.1298383,
+      },
+      "viewport": Object {
+        "northeast": Object {
+          "lat": 42.3980502302915,
+          "lng": -71.12837276970849,
+        },
+        "southwest": Object {
+          "lat": 42.3953522697085,
+          "lng": -71.13107073029151,
+        },
+      },
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+    "international_phone_number": "+1 617-545-4361",
+    "name": "GenOne Technologies LLC",
+    "opening_hours": Object {
+      "open_now": false,
+      "periods": Array [
+        Object {
+          "close": Object {
+            "day": 1,
+            "time": "1700",
+          },
+          "open": Object {
+            "day": 1,
+            "time": "0900",
+          },
+        },
+        Object {
+          "close": Object {
+            "day": 2,
+            "time": "1700",
+          },
+          "open": Object {
+            "day": 2,
+            "time": "0900",
+          },
+        },
+        Object {
+          "close": Object {
+            "day": 3,
+            "time": "1700",
+          },
+          "open": Object {
+            "day": 3,
+            "time": "0900",
+          },
+        },
+        Object {
+          "close": Object {
+            "day": 4,
+            "time": "1700",
+          },
+          "open": Object {
+            "day": 4,
+            "time": "0900",
+          },
+        },
+        Object {
+          "close": Object {
+            "day": 5,
+            "time": "1700",
+          },
+          "open": Object {
+            "day": 5,
+            "time": "0900",
+          },
+        },
+      ],
+      "weekday_text": Array [
+        "Monday: 9:00 AM – 5:00 PM",
+        "Tuesday: 9:00 AM – 5:00 PM",
+        "Wednesday: 9:00 AM – 5:00 PM",
+        "Thursday: 9:00 AM – 5:00 PM",
+        "Friday: 9:00 AM – 5:00 PM",
+        "Saturday: Closed",
+        "Sunday: Closed",
+      ],
+    },
+    "place_id": "ChIJs2Kd69d244kRNm72h5qOUms",
+    "plus_code": Object {
+      "compound_code": "9VWC+M3 Cambridge, MA, USA",
+      "global_code": "87JC9VWC+M3",
+    },
+    "reference": "ChIJs2Kd69d244kRNm72h5qOUms",
+    "scope": "GOOGLE",
+    "types": Array [
+      "point_of_interest",
+      "establishment",
+    ],
+    "url": "https://maps.google.com/?cid=7733400304505744950",
+    "utc_offset": -240,
+    "vicinity": "2380 Massachusetts Avenue #105a, Cambridge",
+    "website": "http://genone.tech/",
+  },
+  "status": "OK",
+} MARKER ENDS
+ENTERING IP CALL!!!!
+GETTING PAST THE LOCATION
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+cannot find place  Object {
+  "candidates": Array [],
+  "status": "ZERO_RESULTS",
+}
+MARKER STARTS
+Object {
+  "address_components": Array [
+    Object {
+      "long_name": "105a",
+      "short_name": "105a",
+      "types": Array [
+        "subpremise",
+      ],
+    },
+    Object {
+      "long_name": "2380",
+      "short_name": "2380",
+      "types": Array [
+        "street_number",
+      ],
+    },
+    Object {
+      "long_name": "Massachusetts Avenue",
+      "short_name": "Massachusetts Ave",
+      "types": Array [
+        "route",
+      ],
+    },
+    Object {
+      "long_name": "North Cambridge",
+      "short_name": "North Cambridge",
+      "types": Array [
+        "neighborhood",
+        "political",
+      ],
+    },
+    Object {
+      "long_name": "Cambridge",
+      "short_name": "Cambridge",
+      "types": Array [
+        "locality",
+        "political",
+      ],
+    },
+    Object {
+      "long_name": "Middlesex County",
+      "short_name": "Middlesex County",
+      "types": Array [
+        "administrative_area_level_2",
+        "political",
+      ],
+    },
+    Object {
+      "long_name": "Massachusetts",
+      "short_name": "MA",
+      "types": Array [
+        "administrative_area_level_1",
+        "political",
+      ],
+    },
+    Object {
+      "long_name": "United States",
+      "short_name": "US",
+      "types": Array [
+        "country",
+        "political",
+      ],
+    },
+    Object {
+      "long_name": "02140",
+      "short_name": "02140",
+      "types": Array [
+        "postal_code",
+      ],
+    },
+  ],
+  "adr_address": "<span class=\"street-address\">2380 Massachusetts Ave #105a</span>, <span class=\"locality\">Cambridge</span>, <span class=\"region\">MA</span> <span class=\"postal-code\">02140</span>, <span class=\"country-name\">USA</span>",
+  "business_status": "OPERATIONAL",
+  "formatted_address": "2380 Massachusetts Ave #105a, Cambridge, MA 02140, USA",
+  "formatted_phone_number": "(617) 545-4361",
+  "geometry": Object {
+    "location": Object {
+      "lat": 42.3966312,
+      "lng": -71.1298383,
+    },
+    "viewport": Object {
+      "northeast": Object {
+        "lat": 42.3980502302915,
+        "lng": -71.12837276970849,
+      },
+      "southwest": Object {
+        "lat": 42.3953522697085,
+        "lng": -71.13107073029151,
+      },
+    },
+  },
+  "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+  "international_phone_number": "+1 617-545-4361",
+  "name": "GenOne Technologies LLC",
+  "opening_hours": Object {
+    "open_now": false,
+    "periods": Array [
+      Object {
+        "close": Object {
+          "day": 1,
+          "time": "1700",
+        },
+        "open": Object {
+          "day": 1,
+          "time": "0900",
+        },
+      },
+      Object {
+        "close": Object {
+          "day": 2,
+          "time": "1700",
+        },
+        "open": Object {
+          "day": 2,
+          "time": "0900",
+        },
+      },
+      Object {
+        "close": Object {
+          "day": 3,
+          "time": "1700",
+        },
+        "open": Object {
+          "day": 3,
+          "time": "0900",
+        },
+      },
+      Object {
+        "close": Object {
+          "day": 4,
+          "time": "1700",
+        },
+        "open": Object {
+          "day": 4,
+          "time": "0900",
+        },
+      },
+      Object {
+        "close": Object {
+          "day": 5,
+          "time": "1700",
+        },
+        "open": Object {
+          "day": 5,
+          "time": "0900",
+        },
+      },
+    ],
+    "weekday_text": Array [
+      "Monday: 9:00 AM – 5:00 PM",
+      "Tuesday: 9:00 AM – 5:00 PM",
+      "Wednesday: 9:00 AM – 5:00 PM",
+      "Thursday: 9:00 AM – 5:00 PM",
+      "Friday: 9:00 AM – 5:00 PM",
+      "Saturday: Closed",
+      "Sunday: Closed",
+    ],
+  },
+  "place_id": "ChIJs2Kd69d244kRNm72h5qOUms",
+  "plus_code": Object {
+    "compound_code": "9VWC+M3 Cambridge, MA, USA",
+    "global_code": "87JC9VWC+M3",
+  },
+  "reference": "ChIJs2Kd69d244kRNm72h5qOUms",
+  "scope": "GOOGLE",
+  "types": Array [
+    "point_of_interest",
+    "establishment",
+  ],
+  "url": "https://maps.google.com/?cid=7733400304505744950",
+  "utc_offset": -240,
+  "vicinity": "2380 Massachusetts Avenue #105a, Cambridge",
+  "website": "http://genone.tech/",
+} MARKER ENDS

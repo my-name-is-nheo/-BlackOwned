@@ -16,7 +16,8 @@ import SettingScreen from "./screens/settingScreen";
 import RegisterScreen from "./screens/registerScreen";
 import LoginScreen from "./screens/loginScreen";
 import BannedScreen from "./screens/bannedScreen";
-import { createStackNavigator } from "@react-navigation/stack";
+import FillDb from "./screens/fillDb";
+
 export default function App(props) {
   const [isHome, setIsHome] = useState(false);
   const [noLoad, setNoLoad] = useState(false);
@@ -95,6 +96,25 @@ export default function App(props) {
             render={(props) => {
               return (
                 <AddScreen
+                  {...props}
+                  backValue={fromBack}
+                  updateHistory={updateHistory}
+                  cameFromBack={cameFromBack}
+                  noTimeOut={noTimeOut}
+                  noLoad={createNoLoad}
+                  backOne={props.history.entries[0].pathname}
+                  back={backHistory.historyArray[0]}
+                  fixHistory={fixHistory}
+                />
+              );
+            }}
+          ></Route>
+          <Route
+            path="/fillDb"
+            exact
+            render={(props) => {
+              return (
+                <FillDb
                   {...props}
                   backValue={fromBack}
                   updateHistory={updateHistory}

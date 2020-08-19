@@ -105,7 +105,10 @@ We need to be able to access settings, add a vibrator
 
     props.history.push("/settings");
   };
-
+  const goToFillDb = () => {
+    props.cameFromBack(false);
+    props.history.push("/fillDb");
+  };
   const goToRegister = () => {
     props.cameFromBack(false);
     props.history.push("/register");
@@ -141,6 +144,16 @@ We need to be able to access settings, add a vibrator
             >
               <View>
                 <Text>Favorites</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ left: 70, top: 10 }}>
+            <TouchableOpacity
+              onPress={goToFillDb}
+              style={styles.circularButton}
+            >
+              <View>
+                <Text>Pop Database</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -214,6 +227,16 @@ We need to be able to access settings, add a vibrator
             >
               <View>
                 <Text>Favorites</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={{ left: 70, top: 10 }}>
+            <TouchableOpacity
+              onPress={goToFillDb}
+              style={styles.circularButton}
+            >
+              <View>
+                <Text>Pop Database</Text>
               </View>
             </TouchableOpacity>
           </View>

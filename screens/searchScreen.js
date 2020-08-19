@@ -261,7 +261,6 @@ class Search extends React.Component {
     const placeDetails = await axios.get(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${marker.place_id}&key=${token.googleApi}`
     );
-    console.log(placeDetails.data.result.opening_hours, "MARKER ENDS");
     this.setState({
       setOverlay: true,
       locationName: marker.name,

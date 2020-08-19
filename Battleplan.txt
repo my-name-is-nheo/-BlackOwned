@@ -7,3 +7,6 @@ Monetization methods ideas -
 1.  Ask companies to offer incentives on a tiered scale for those who have engaged in political action 
 2.  Advertising
 3.  Contributions from users
+
+
+Track from cards where customers click on

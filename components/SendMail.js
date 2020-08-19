@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, Overlay, Card } from "react-native-elements";
+import { Button, Overlay, Card, Input } from "react-native-elements";
 import {
   View,
   Text,
   TouchableOpacity,
   Linking,
   AsyncStorage,
+  TextInput,
 } from "react-native";
 import decode from "jwt-decode";
 import token from "../token";
@@ -22,7 +23,8 @@ const SendMail = (props) => {
         const isLoggedIn = await axios.post(`${token.backendApi}/users/auth`, {
           email: decodedTokenEmail,
         });
-        if (loggedIn.data) {
+
+        if (isLoggedIn.data === true) {
           setLoggedIn(true);
         } else {
           setLoggedIn(false);
@@ -33,41 +35,15 @@ const SendMail = (props) => {
     }
     checkIfLoggedIn();
   });
-
+  console.log(loggedIn, "THIS IS LOGGED IN");
   return loggedIn ? (
     <View>
       <Overlay isVisible={props.visible} onBackdropPress={props.notVisible}>
         <Card
-          title={props.locationName}
-          image={{
-            uri: props.imgUri,
-          }}
+          title={
+            "Want to create positive change for the African-American community?  Let us send a letter on your behalf to your local representative demanding they take swift and decisive action for the betterment of marginalized communities!"
+          }
         >
-          <Text style={{ marginBottom: 10 }}>
-            <Text style={{ fontWeight: "bold" }}>Address:</Text> {props.address}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(`tel:${props.phoneNumber}`);
-            }}
-          >
-            <Text style={{ marginBottom: 10 }}>
-              <Text style={{ fontWeight: "bold" }}>Phone Number:</Text>{" "}
-              {props.phoneNumber}
-            </Text>
-          </TouchableOpacity>
-          {props.openNow !== "" && (
-            <Text style={{ marginBottom: 10 }}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  color: props.openNow.open_now ? "blue" : "red",
-                }}
-              >
-                {props.openNow.open_now ? "Open Now" : "Closed"}
-              </Text>
-            </Text>
-          )}
           <Button
             // icon={{ name: "code" }}
             backgroundColor="#03A9F4"
@@ -81,7 +57,7 @@ const SendMail = (props) => {
             onPress={() => {
               props.handleActionButton();
             }}
-            title="Take political action and earn incentives now!"
+            title="Sure! Let's amplify their voices!"
           />
         </Card>
       </Overlay>
@@ -89,37 +65,7 @@ const SendMail = (props) => {
   ) : (
     <View>
       <Overlay isVisible={props.visible} onBackdropPress={props.notVisible}>
-        <Card
-          title={props.locationName}
-          image={{
-            uri: props.imgUri,
-          }}
-        >
-          <Text style={{ marginBottom: 10 }}>
-            <Text style={{ fontWeight: "bold" }}>Address:</Text> {props.address}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(`tel:${props.phoneNumber}`);
-            }}
-          >
-            <Text style={{ marginBottom: 10 }}>
-              <Text style={{ fontWeight: "bold" }}>Phone Number:</Text>{" "}
-              {props.phoneNumber}
-            </Text>
-          </TouchableOpacity>
-          {props.openNow !== "" && (
-            <Text style={{ marginBottom: 10 }}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  color: props.openNow.open_now ? "blue" : "red",
-                }}
-              >
-                {props.openNow.open_now ? "Open Now" : "Closed"}
-              </Text>
-            </Text>
-          )}
+        <Card title={props.locationName}>
           <Button
             // icon={{ name: "code" }}
             backgroundColor="#03A9F4"
