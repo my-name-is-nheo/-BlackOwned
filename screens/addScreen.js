@@ -19,6 +19,7 @@ import { ScrollView, TapGestureHandler } from "react-native-gesture-handler";
 import axios from "axios";
 import COUNTRIES from "../constants/Countries";
 import BUSINESS_CATEGORIES from "../constants/BusinessCategories";
+import STATES from "../constants/States";
 
 const window = Dimensions.get("window");
 const image_Height = window.width / 2;
@@ -38,7 +39,7 @@ class AddScreen extends React.Component {
       aL1: null,
       aL2: null,
       city: null,
-      country: null,
+      country: "United States",
       stateProvince: null,
       zip: null,
       comment: null,
@@ -113,7 +114,13 @@ class AddScreen extends React.Component {
     this.props.history.push(this.props.backOne);
     return true;
   };
-  returnCountryInputs = () => {
+  statePickers = () => {
+    const STATESMAPPED = STATES.map((state, key) => {
+      return <Picker.Item key={key} label={state} value={state} />;
+    });
+    return STATESMAPPED;
+  };
+  countryPickers = () => {
     const MERICA = ["United States"];
     //or COUNTRIES for ALL
     const COUNTRYPICKER = MERICA.map((country, key) => {
@@ -121,13 +128,13 @@ class AddScreen extends React.Component {
     });
     return COUNTRYPICKER;
   };
-  returnPickerInputs = () => {
+  businessPickers = () => {
     const BUSINESSPICKER = BUSINESS_CATEGORIES.map((category, key) => {
       return <Picker.Item key={key} label={category} value={category} />;
     });
     return BUSINESSPICKER;
   };
-  returnMappedInputs = () => {
+  mappedInputFields = () => {
     const INPUT_FIELDS = [
       {
         label: "Name of Business",
@@ -145,11 +152,6 @@ class AddScreen extends React.Component {
         onChange: this.onChangeAL2,
       },
       { label: "City", value: this.state.city, onChange: this.onChangeCity },
-      {
-        label: "State/Province",
-        value: this.state.stateProvince,
-        onChange: this.onChangeStateProvince,
-      },
     ];
     const MAPPED_INPUTS = INPUT_FIELDS.map((item, i) => {
       return (
@@ -189,7 +191,7 @@ class AddScreen extends React.Component {
   onChangeComment = (e) => {
     this.setState({ comment: e });
   };
-  setSelectedCatergory = (itemValue, itemIndex) => {
+  setSelectedCategory = (itemValue, itemIndex) => {
     // itemValue = value prop of the item that was selected. itemPosition = the index of the selected item in this picker
     this.setState({ category: itemValue });
   };
@@ -197,16 +199,20 @@ class AddScreen extends React.Component {
     // itemValue = value prop of the item that was selected. itemPosition = the index of the selected item in this picker
     this.setState({ country: itemValue });
   };
-
+  setSelectedStateProvince = (itemValue, itemIndex) => {
+    // itemValue = value prop of the item that was selected. itemPosition = the index of the selected item in this picker
+    this.setState({ stateProvince: itemValue });
+  };
   handleAddEvent = async () => {
     try {
       const USER_INPUT = { ...this.state };
       console.log(USER_INPUT, "this is the state that will go to backend");
       const POST_REQUEST = await axios.post(
         // "http://192.168.1.233:19000/api/add/",
-        "http://192.168.1.233:5000/api/add/",
+        "http://192.168.1.227:5000/api/add/",
         USER_INPUT
       );
+
       return POST_REQUEST.data;
     } catch (err) {
       console.log(err, "err with post request on addSCreen");
@@ -237,11 +243,18 @@ class AddScreen extends React.Component {
             <Picker
               style={styles.input}
               selectedValue={this.state.category}
-              onValueChange={this.setSelectedCatergory}
+              onValueChange={this.setSelectedCategory}
             >
-              {this.returnPickerInputs()}
+              {this.businessPickers()}
             </Picker>
-            {this.returnMappedInputs()}
+            {this.mappedInputFields()}
+            <Picker
+              style={styles.input}
+              selectedValue={this.state.stateProvince}
+              onValueChange={this.setSelectedStateProvince}
+            >
+              {this.statePickers()}
+            </Picker>
             <TextInput
               style={styles.input}
               placeholder="Zip/Postal Code"
@@ -250,10 +263,10 @@ class AddScreen extends React.Component {
             />
             <Picker
               style={styles.input}
-              selectedValue={this.state.country}
-              onValueChange={this.setSelectedCountry}
+              selectedValue={this.state.country} // or "this.state.country"
+              // onValueChange={this.setSelectedCountry}
             >
-              {this.returnCountryInputs()}
+              {this.countryPickers()}
             </Picker>
 
             <TextInput
