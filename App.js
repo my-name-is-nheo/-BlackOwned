@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { NativeRouter, Route, Link, Switch } from "react-router-native";
 import HomeScreen from "./screens/HomeScreen";
-import Search from "./screens/searchScreen";
 import AddScreen from "./screens/addScreen";
 import FavoriteScreen from "./screens/favoriteScreen";
 import SettingScreen from "./screens/settingScreen";
@@ -17,6 +16,7 @@ import RegisterScreen from "./screens/registerScreen";
 import LoginScreen from "./screens/loginScreen";
 import BannedScreen from "./screens/bannedScreen";
 import FillDb from "./screens/fillDb";
+import SearchScreen from "./screens/Search/SearchScreen";
 
 export default function App(props) {
   const [isHome, setIsHome] = useState(false);
@@ -74,7 +74,7 @@ export default function App(props) {
             exact
             render={(props) => {
               return (
-                <Search
+                <SearchScreen
                   {...props}
                   heartPressed={heartPressed}
                   handleHeartPress={handleHeartPress}
