@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { Header, Avatar } from "react-native-elements";
-import styles from "./BusinessesHeader.component.style";
+import styles from "./TopHeader.component.style";
 import BusinessSearchBar from "./BusinessSearchBar/BusinessSearchBar.component";
 
-class BusinessesHeader extends React.Component {
+class TopHeader extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -38,4 +38,4 @@ class BusinessesHeader extends React.Component {
     );
   }
 }
-export default BusinessesHeader;
+export default TopHeader;

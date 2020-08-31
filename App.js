@@ -17,6 +17,8 @@ import LoginScreen from "./screens/loginScreen";
 import BannedScreen from "./screens/bannedScreen";
 import SearchScreen from "./screens/Search/SearchScreen";
 import { createStackNavigator } from "@react-navigation/stack";
+import Icon from "react-native-vector-icons/FontAwesome";
+
 export default function App(props) {
   const [isHome, setIsHome] = useState(false);
   const [noLoad, setNoLoad] = useState(false);

@@ -10,7 +10,6 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
-import { Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import TabNavigator from "react-native-tab-navigator";
@@ -21,11 +20,12 @@ import getZipcodes from "../../services/getZipcodes";
 import BusinessesList from "../../components/BusinessesList/BusinessesList.component";
 import Map from "../../components/Map/Map.component";
 import getGoogleBusinessesData from "../../services/getGoogleBusinessesData";
-import BusinessesHeader from "../../components/BusinessesHeader/BusinessesHeader.component";
+import TopHeader from "../../components/TopHeader/TopHeader.component";
 import styles from "./SearchScreen.style";
 import FavoriteScreen from "../favoriteScreen";
 import OverlayTest from "../../components/Overlay";
 import SendMail from "../../components/SendMail";
+import { Container } from "native-base";
 
 const deviceW = Dimensions.get("window").width;
 
@@ -58,7 +58,7 @@ class SearchScreen extends React.Component {
     this.setState({ selectedTab });
   };
 
-  componentDidMount = () => {
+  centerMapForUserLocation = () => {
     /*
     problem facing here.
     1. geolocator is very accurate. you have to enable location on expo cli as well and will update to your location. (defaults to sanfrancisco if you don't)
@@ -75,26 +75,32 @@ class SearchScreen extends React.Component {
     emulator 7-9secbusinesses show up, 13 sec markers showed up
     phone (ios) businesses show up,  markers showed up, they'll show up eventually.
     */
-    var options = {
-      enableHighAccuracy: true,
-      maximumAge: 60000,
-      timeout: 2000,
-    };
+
+    console.log("center");
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log(position, "this is position");
+        //   console.log(position, "this is position");
         var userCurrentLocation = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         };
-        console.log(userCurrentLocation, " this is user's currentlocation"); //<==== works fine
+        // console.log(userCurrentLocation, " this is user's currentlocation"); //<==== works fine
         this.setState({ currentCoordinates: userCurrentLocation });
       },
       (error) => {
-        console.log("navigator.geolocation ain't working");
+        //    console.log("navigator.geolocation ain't working");
       },
-      options
+      {
+        enableHighAccuracy: true,
+        maximumAge: 60000,
+        timeout: 2000,
+      }
     );
+  };
+
+  componentDidMount = () => {
+    console.log("component did mount");
+    this.centerMapForUserLocation();
 
     const ipCall = async () => {
       try {
@@ -183,7 +189,7 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
     const placeDetails = await axios.get(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${business.place_id}&key=${tokens.googleApi}`
     );
-    console.log(placeDetails.data.result.opening_hours, "MARKER ENDS");
+    //console.log(placeDetails.data.result.opening_hours, "MARKER ENDS");
     this.setState({
       setOverlay: true,
       locationName: business.name,
@@ -206,7 +212,7 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
   render() {
     return (
       <View style={styles.searchContainer}>
-        <BusinessesHeader />
+        <TopHeader />
         <TabNavigator tabBarStyle={{}} sceneStyle={{}}>
           <TabNavigator.Item
             selected={this.state.selectedTab === "addBusiness"}
@@ -241,7 +247,10 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
             renderIcon={() => (
               <MaterialIcon name="my-location" size={px2dp(22)} color="#666" />
             )}
-            onPress={() => this.setState({ selectedTab: "map" })}
+            onPress={() => {
+              this.setState({ selectedTab: "map" });
+              this.centerMapForUserLocation();
+            }}
           >
             <Map
               setOverlay={this.handleSetOverlay}
@@ -279,7 +288,6 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
             <BusinessesList businesses={this.state.nearbyBusinesses} />
           </TabNavigator.Item>
         </TabNavigator>
-
         <OverlayTest
           address={this.state.address}
           locationName={this.state.locationName}
