@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-// import { Picker } from "@react-native-community/picker";
+import React from "react";
+import ImagePicker from "react-native-image-picker";
 import { material, robotoWeights } from "react-native-typography";
 import {
   Text,
@@ -14,22 +14,20 @@ import {
   Picker,
   Animated,
   Keyboard,
+  Image,
 } from "react-native";
-import { ScrollView, TapGestureHandler } from "react-native-gesture-handler";
-import axios from "axios";
-import COUNTRIES from "../constants/Countries";
-import BUSINESS_CATEGORIES from "../constants/BusinessCategories";
-import STATES from "../constants/States";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import Axios from "axios";
+import COUNTRIES from "../../constants/Countries";
+import BUSINESS_CATEGORIES from "../../constants/BusinessCategories";
+import STATES from "../../constants/States";
 
 const window = Dimensions.get("window");
 const image_Height = window.width / 2;
 const image_HeightSmall = window.width / 4;
-const logo = require("../images/blm.png");
-/*
-- everything should work, only problem is user will have trouble seeing some input as screen does not appear to automatically populate to current textField.
+const BLMLOGO = require("../../images/blm.png");
+const UPLOADIMAGE = require("../../images/uploadImageDefault.png");
 
-
-*/
 class AddScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -39,10 +37,11 @@ class AddScreen extends React.Component {
       aL1: null,
       aL2: null,
       city: null,
-      country: "United States",
+      country: null,
       stateProvince: null,
       zip: null,
       comment: null,
+      photos: null,
     };
     this.imageHeight = new Animated.Value(image_Height);
   }
@@ -123,7 +122,7 @@ class AddScreen extends React.Component {
   countryPickers = () => {
     const MERICA = ["United States"];
     //or COUNTRIES for ALL
-    const COUNTRYPICKER = MERICA.map((country, key) => {
+    const COUNTRYPICKER = COUNTRIES.map((country, key) => {
       return <Picker.Item key={key} label={country} value={country} />;
     });
     return COUNTRYPICKER;
@@ -134,6 +133,7 @@ class AddScreen extends React.Component {
     });
     return BUSINESSPICKER;
   };
+
   mappedInputFields = () => {
     const INPUT_FIELDS = [
       {
@@ -207,7 +207,7 @@ class AddScreen extends React.Component {
     try {
       const USER_INPUT = { ...this.state };
       console.log(USER_INPUT, "this is the state that will go to backend");
-      const POST_REQUEST = await axios.post(
+      const POST_REQUEST = await Axios.post(
         // "http://192.168.1.233:19000/api/add/",
         "http://192.168.1.227:5000/api/add/",
         USER_INPUT
@@ -217,6 +217,18 @@ class AddScreen extends React.Component {
     } catch (err) {
       console.log(err, "err with post request on addSCreen");
     }
+  };
+  handleChoosePhoto = () => {
+    console.log("clicked upload");
+    const options = {
+      mediaType: "mixed",
+      quality: 1,
+      durationLimit: 10,
+      noData: true,
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log(response);
+    });
   };
   render() {
     return (
@@ -236,8 +248,8 @@ class AddScreen extends React.Component {
             Local Business not located? Add and promote them yourself!
           </Text>
           <Animated.Image
-            source={logo}
-            style={[styles.logo, { height: this.imageHeight }]}
+            source={BLMLOGO}
+            style={[styles.blmLogo, { height: this.imageHeight }]}
           />
           <ScrollView>
             <Picker
@@ -275,6 +287,11 @@ class AddScreen extends React.Component {
               placeholder="Comment"
               onChangeText={this.onChangeComment}
             />
+            <TouchableOpacity onPress={this.handleChoosePhoto}>
+              <View style={{ justifyContent: "center" }}>
+                <Image source={UPLOADIMAGE} style={styles.dropImageButton} />
+              </View>
+            </TouchableOpacity>
           </ScrollView>
           <Button title="Add" onPress={this.handleAddEvent} />
         </KeyboardAvoidingView>
@@ -290,6 +307,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: window.height - 10,
   },
+  dropImageButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: 100,
+    width: 100,
+  },
   form: {
     width: 250,
   },
@@ -301,7 +324,7 @@ const styles = StyleSheet.create({
     width: window.width - 30,
   },
   text: { textAlign: "center" },
-  logo: {
+  blmLogo: {
     height: image_Height,
     resizeMode: "contain",
     marginBottom: 20,
