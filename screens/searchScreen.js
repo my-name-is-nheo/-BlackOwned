@@ -18,10 +18,12 @@ import saveToFavorites from "./../services/saveToFavorites";
 // import Marker from "react-native-maps";
 import addLatShrugged from "./../services/addLatShrugged";
 import getZipcodes from "./../services/getZipcodes";
+import { getZipArray, findLocalBusinesses } from "../services/getZipArray";
 import Map from "../components/Map";
 import OverlayTest from "../components/Overlay";
 import token from "../token";
 import SendMail from "./../components/SendMail";
+import blackPowerFist from "../images/blackPowerFist.png";
 
 class Search extends React.Component {
   constructor(props) {
@@ -46,21 +48,13 @@ class Search extends React.Component {
     const ipCall = async () => {
       try {
         console.log("ENTERING IP CALL!!!!");
-        // const placeDetails = await axios.get(
-        //   "https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJB_J1KUvTD4gR0yzGC8PfxHU&key=AIzaSyAqqM6FVb05H_mzyYnGXBnekMg4SamG1ds"
-        // );
-        // console.log(
-        //   placeDetails.data,
-        //   " this is place details on line 41 of searchscreen.js"
-        // );
-        //   "https://api.data.gov/sam/v3/registrations?qterms=minorityOwned:OY+AND+samAddress.zip:(02139,12140)&api_key=${token.samApi}&start=1&length=1000",
+        //To-do: Figure out why the fuck this isn't pulling my IP
         // const ipResult = await ip();
         var userLocation = await axios.get(
-          `http://ip-api.com/json/65.96.175.95`
+          `http://ip-api.com/json/71.200.79.79`
         ); //
         // will eventually load
         // `http://ip-api.com/json/${ipResult}`
-        console.log("GETTING PAST THE LOCATION");
 
         const userCoordinates = {
           latitude: userLocation.data.lat,
@@ -69,18 +63,23 @@ class Search extends React.Component {
         const currentZipcode = userLocation.data.zip;
 
         const zipCodes = await getZipcodes(currentZipcode, 2);
-        const zipString = this.getZipString(zipCodes.zip_codes);
-        const businesses = await axios.get(
-          `https://api.data.gov/sam/v3/registrations?qterms=samAddress.zip:${zipString}+AND+minorityOwned:true&OY&api_key=${tokens.samApi}&start=1&length=1000`
-        );
-        const groomedArray = this.usefulInfo(businesses.data.results);
+        // const zipArray = getZipArray(zipCodes.zip_codes);
+        //DON'T FORGET ONCE ZIPARRAY WORKS AGAIN TO PASS IN ZIPARRAY TO FIND LOCAL BUSINESS
+        //FOR THE FUNCTION BELOW, MAKE SURE TO REPLACE THE IP WITH EITHER YOURS OR A DYNAMIC VARIABLE THAT POINTS TO ANY GIVEN USER'S
+        const bizArray = await findLocalBusinesses(zipCodes);
+
+        // const zipString = this.getZipString(zipCodes.zip_codes);
+        // // const businesses = await axios.get(
+        // //   `https://api.data.gov/sam/v3/registrations?qterms=samAddress.zip:${zipString}+AND+minorityOwned:true&OY&api_key=${tokens.samApi}&start=1&length=1000`
+        // // );
+        // const groomedArray = this.usefulInfo(bizArray);
 
         this.setState({
           currentCoordinates: userCoordinates,
-          nearbyBusinesses: groomedArray,
+          nearbyBusinesses: bizArray,
         });
 
-        const markers = await addLatShrugged(groomedArray, userCoordinates);
+        const markers = await addLatShrugged(bizArray, userCoordinates);
         this.setState({ markers: markers });
       } catch (error) {
         console.log(error, "componentDidMount error on searchScreen.js");
@@ -221,14 +220,15 @@ class Search extends React.Component {
 
   usefulInfo = (arr) => {
     const mapInfo = arr.map((element) => {
-      let infoObj = {
-        name: element.legalBusinessName,
-        address: element.samAddress.line1,
-        city: element.samAddress.city,
-        zipcode: element.samAddress.zip,
-      };
+      console.log(element);
+      // let infoObj = {
+      //   name: element.legalBusinessName,
+      //   address: element.samAddress.line1,
+      //   city: element.samAddress.city,
+      //   zipcode: element.samAddress.zip,
+      // };
 
-      return infoObj;
+      // return infoObj;
     });
     return mapInfo;
   };
@@ -258,19 +258,17 @@ class Search extends React.Component {
     this.setState({ actionVisible: true, setOverlay: false });
   };
   handleSetOverlay = async (marker) => {
-    const placeDetails = await axios.get(
-      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${marker.place_id}&key=${token.googleApi}`
-    );
+    console.log(marker, "this is the marker in handleSetOverLay");
     this.setState({
       setOverlay: true,
       locationName: marker.name,
       address: marker.address,
-      imgUri: placeDetails.data.result.icon,
-      phoneNumber: placeDetails.data.result.formatted_phone_number,
-      openNow:
-        placeDetails.data.result.opening_hours !== undefined
-          ? placeDetails.data.result.opening_hours
-          : "",
+      // imgUri: placeDetails.data.result.icon,
+      // phoneNumber: placeDetails.data.result.formatted_phone_number,
+      // openNow:
+      //   placeDetails.data.result.opening_hours !== undefined
+      //     ? placeDetails.data.result.opening_hours
+      //     : "",
     });
   };
   handleNotVisible = () => {
@@ -281,7 +279,6 @@ class Search extends React.Component {
   };
 
   render() {
-    // console.log(this.state.markers, "this is state.markers from searchScreen");
     return (
       <View
         style={{
@@ -341,7 +338,8 @@ class Search extends React.Component {
           removeOverlay={this.removeOverlay}
           visible={this.state.setOverlay}
           style={{ marginTop: 200 }}
-          imgUri={this.state.imgUri}
+          //When you come back to this, make it so that if it can't find a picture, it goes to some sort of generic pic for now
+          // imgUri={blackPowerFist}
           phoneNumber={this.state.phoneNumber}
           openNow={this.state.openNow}
           handleActionButton={this.handleActionButton}

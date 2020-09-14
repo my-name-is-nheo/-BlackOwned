@@ -24,9 +24,10 @@ export default function Map(props) {
         longitudeDelta: 0.0421,
       }}
     >
-      {props.markers.map((marker) => {
+      {props.markers.map((marker, i) => {
         return (
           <Marker
+            key={i}
             onPress={() => {
               props.setOverlay(marker);
             }}

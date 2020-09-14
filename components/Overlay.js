@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Overlay, Card, colors } from "react-native-elements";
-import { View, Text, TouchableOpacity, Linking } from "react-native";
+import { View, Text, TouchableOpacity, Image, Linking } from "react-native";
 
 const OverlayTest = (props) => {
   return (
@@ -8,10 +8,14 @@ const OverlayTest = (props) => {
       <Overlay isVisible={props.visible} onBackdropPress={props.removeOverlay}>
         <Card
           title={props.locationName}
-          image={{
-            uri: props.imgUri,
-          }}
+          // image={{
+          //   uri: "../images/blackPowerFist.jpg",
+          //   height: "200px",
+          // }}
         >
+          <Card.Image
+            source={require("../images/blackPowerFist.jpg")}
+          ></Card.Image>
           <Text style={{ marginBottom: 10 }}>
             <Text style={{ fontWeight: "bold" }}>Address:</Text> {props.address}
           </Text>
