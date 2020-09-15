@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import LoadingScreen from "./loadingScreen";
-import Search from "./searchScreen";
 
 export default function HomeScreen(props) {
   const [isLoaded, setIsLoaded] = useState(false);

@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import { Button, Overlay, Card, colors } from "react-native-elements";
 import { View, Text, TouchableOpacity, Image, Linking } from "react-native";
-
+import styles from "../components/BusinessCard/BusinessCard.component.style";
+import BusinessCard from "../components/BusinessCard/BusinessCard.component";
 const OverlayTest = (props) => {
   return (
     <View>
       <Overlay isVisible={props.visible} onBackdropPress={props.removeOverlay}>
-        <Card
+        <BusinessCard />
+        {/* <Card
           title={props.locationName}
+
           // image={{
           //   uri: "../images/blackPowerFist.jpg",
           //   height: "200px",
           // }}
         >
-          <Card.Image
-            source={require("../images/blackPowerFist.jpg")}
-          ></Card.Image>
+          <Image
+            source={{ uri: "../images/blackPowerFist.png" }}
+            style={styles.imageStyle}
+
+            //   PlaceholderContent={<Icon name="user" color="#ffffff" />} //<ActivityIndicator />}
+          />
           <Text style={{ marginBottom: 10 }}>
             <Text style={{ fontWeight: "bold" }}>Address:</Text> {props.address}
           </Text>
@@ -56,7 +62,7 @@ const OverlayTest = (props) => {
             }}
             title="Take political action and earn incentives now!"
           />
-        </Card>
+        </Card> */}
       </Overlay>
     </View>
   );
