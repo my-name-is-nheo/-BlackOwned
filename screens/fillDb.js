@@ -114,7 +114,7 @@ class FillDb extends React.Component {
     const finalSavedDbParsed = JSON.parse(finalSavedDb);
     for (var i = 0; i < finalSavedDbParsed.length; i++) {
       await axios.post(
-        "http://192.168.43.49:5000/api/users/testModel",
+        "http://192.168.1.216:5000/api/users/testModel",
         finalSavedDbParsed[i]
       );
     }
@@ -331,7 +331,7 @@ class FillDb extends React.Component {
         for (var i = 0; i < arrayToFireOff.length; i++) {
           let { name, hasVerified, linkingId } = arrayToFireOff[i];
           let fixedObj = { name, hasVerified, linkingId };
-          axios.post("http://192.168.43.49:5000/api/users/testModel", fixedObj);
+          axios.post("http://192.168.1.216:5000/api/users/testModel", fixedObj);
         }
 
         return;

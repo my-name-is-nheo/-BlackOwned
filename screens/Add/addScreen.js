@@ -1,5 +1,5 @@
 import React from "react";
-import ImagePicker from "react-native-image-picker";
+// import ImagePicker from "react-native-image-picker";
 import { material, robotoWeights } from "react-native-typography";
 import {
   Text,
@@ -15,12 +15,15 @@ import {
   Animated,
   Keyboard,
   Image,
+  Platform,
 } from "react-native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Axios from "axios";
 import COUNTRIES from "../../constants/Countries";
 import BUSINESS_CATEGORIES from "../../constants/BusinessCategories";
 import STATES from "../../constants/States";
+import * as Permissions from "expo-permissions";
+import * as ImagePicker from "expo-image-picker";
 
 const window = Dimensions.get("window");
 const image_Height = window.width / 2;
@@ -41,7 +44,7 @@ class AddScreen extends React.Component {
       stateProvince: null,
       zip: null,
       comment: null,
-      photos: null,
+      images: [], // show collection view (map this.state.images)
     };
     this.imageHeight = new Animated.Value(image_Height);
   }
@@ -71,12 +74,21 @@ class AddScreen extends React.Component {
     }
 
     BackHandler.addEventListener("hardwareBackPress", this.backOne);
+    this.getPermissionAsync();
   };
   componentWillUnmount = () => {
     this.keyboardWillShowSub.remove();
     this.keyboardWillHideSub.remove();
 
     BackHandler.removeEventListener("hardwareBackPress", this.backOne);
+  };
+  getPermissionAsync = async () => {
+    if (Platform.OS !== "web") {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+      }
+    }
   };
   keyboardWillShow = (event) => {
     Animated.timing(this.imageHeight, {
@@ -209,7 +221,7 @@ class AddScreen extends React.Component {
       console.log(USER_INPUT, "this is the state that will go to backend");
       const POST_REQUEST = await Axios.post(
         // "http://192.168.1.233:19000/api/add/",
-        "http://192.168.1.227:5000/api/add/",
+        "http://192.168.1.216:5000/api/add/",
         USER_INPUT
       );
 
@@ -218,18 +230,24 @@ class AddScreen extends React.Component {
       console.log(err, "err with post request on addSCreen");
     }
   };
-  handleChoosePhoto = () => {
+  handleChoosePhoto = async () => {
     console.log("clicked upload");
-    const options = {
-      mediaType: "mixed",
-      quality: 1,
-      durationLimit: 10,
-      noData: true,
-    };
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log(response);
-    });
+    try {
+      var result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      if (!result.cancelled) {
+        this.setState({ images: this.state.images.concat(result.uri) });
+        console.log(this.state.images);
+      }
+    } catch (error) {
+      console.log(error, " on handleChoosePhoto");
+    }
   };
+  mapImages = () => {};
   render() {
     return (
       <View
