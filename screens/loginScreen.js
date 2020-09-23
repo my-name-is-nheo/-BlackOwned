@@ -102,7 +102,7 @@ class LoginScreen extends React.Component {
 
         this.props.history.push("/banned");
       }
-      console.log(err.response.data, "axios post failed");
+      console.log(err.response.data, "axios post failed. ");
     }
   };
   registerClick = () => {

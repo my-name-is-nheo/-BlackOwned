@@ -64,6 +64,14 @@ class Map extends React.Component {
                   );
                 }
               })}
+            <Marker
+              coordinate={{
+                latitude: this.props.currentCoordinates.latitude,
+                longitude: this.props.currentCoordinates.longitude,
+              }}
+              pinColor={"blue"}
+              title={"current location"}
+            />
           </MapView>
           <Button
             // icon={{ name: "code" }}

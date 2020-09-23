@@ -23,6 +23,7 @@ export default function App(props) {
   const [noLoad, setNoLoad] = useState(false);
   const [nto, setNto] = useState(false);
   const [fromBack, setFromBack] = useState(false);
+  const [loginAlert, setLoginAlert] = useState(false);
   const [backHistory, setBackHistory] = useState({
     presentLocation: "/",
     historyArray: [],
@@ -62,6 +63,9 @@ export default function App(props) {
     newHeartPressed[i] = !newHeartPressed[i];
     setHeartPressed(newHeartPressed);
   };
+  const removeOverlayAlert = () => {
+    setLoginAlert(false);
+  };
 
   // {presentUri: locationX, historyArray: [locationY, locationZ]}
 
@@ -76,6 +80,9 @@ export default function App(props) {
               return (
                 <SearchScreen
                   {...props}
+                  removeOverlayAlert={removeOverlayAlert}
+                  loginAlert={loginAlert}
+                  setLoginAlert={setLoginAlert}
                   heartPressed={heartPressed}
                   handleHeartPress={handleHeartPress}
                   backValue={fromBack}

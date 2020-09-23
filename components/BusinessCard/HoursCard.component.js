@@ -1,15 +1,5 @@
-//Stuff to start when you return to this project:  Make sure to fix the code
-//So that once you've logged in while in the business list, it updates how
-//many hearts are filled in.
-
 import * as React from "react";
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  AsyncStorage,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import {
   Card,
   ListItem,
@@ -17,56 +7,19 @@ import {
   Icon,
   Image,
   Rating,
-  Avatar,
   Divider,
 } from "react-native-elements";
 import styles from "./BusinessCard.component.style";
 import axios from "axios";
 import cleanAddress from "./../../services/cleanAddress";
-import HoursCard from "./HoursCard.component";
-import authUserLogin from "./../../services/authUserLogin";
-import decode from "jwt-decode";
-import { ThemeProvider } from "@react-navigation/native";
-
-class BusinessCard extends React.Component {
+class HoursCard extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { height: 0 };
     // this.src = "../../assets/images/women.png";
     this.src = "../../images/blackPowerFist.jpg";
-    this.state = { hours: false, heart: false };
-    // if (this.props.business.photos) {
-    //   var photoreference = this.props.business.photos[0].photo_reference;
-    //   this.src = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoreference}&key=${token.googleApi}`;
-    // }
   }
-  componentDidMount = async () => {
-    console.log("component did mount is doing some shit");
-    const hearts = await this.findHearts();
-    this.props.heartFix(this.props.id, hearts);
-  };
-  findHearts = async () => {
-    console.log("you've entered the heart");
-    const token = await AsyncStorage.getItem("userToken");
 
-    if (token === null || token === undefined) {
-      console.log("find hearts should have returned false");
-      return false;
-    }
-    const decoded = decode(token);
-    const payload = { userInfo: decoded, businessId: this.props.business._id };
-    const heartExists = await axios.post(
-      "http://192.168.43.49:5000/api/auth/hearts",
-      payload
-    );
-    if (heartExists.data === false) {
-      return false;
-    } else {
-      if (heartExists.data[decoded._id] === true) {
-        return true;
-      }
-      return false;
-    }
-  };
   trimZeros = (string) => {
     let flag = false;
     let returnString = "";
@@ -81,9 +34,6 @@ class BusinessCard extends React.Component {
       }
     }
     return JSON.parse(returnString);
-  };
-  showHours = () => {
-    this.setState({ hours: !this.state.hours });
   };
 
   openingHours = (periods) => {
@@ -137,117 +87,69 @@ class BusinessCard extends React.Component {
     }
     return returnString;
   };
-  showHeart = async () => {
-    const presentState = { ...this.state };
-    const token = await AsyncStorage.getItem("userToken");
-    if (token === null) {
-      return this.props.setLoginAlert(true);
-    }
-    const loggedIn = await authUserLogin(token);
-    if (loggedIn) {
-      this.addToFavs(
-        token,
-        this.props.hearts[this.props.id] === undefined
-          ? true
-          : !this.props.hearts[this.props.id]
-      );
-      this.props.setHeart(this.props.id);
-    }
+  closeHours = () => {
+    this.props.hours();
   };
-
-  addToFavs = async (token, present) => {
-    const decoded = decode(token);
-    const favorited = await axios.post(
-      "http://192.168.43.49:5000/api/favorites",
-      {
-        decoded,
-        businessId: this.props.business._id,
-        liked: present,
-      }
-    );
-  };
-
   render() {
-    return this.state.hours === false ? (
+    if (this.props.business.name.includes("Satkaa")) {
+      console.log(this.props.business.opening_hours.weekday_text);
+    }
+    return (
       <Card
         containerStyle={styles.cardContainer}
         wrapperStyle={styles.cardWrapper}
       >
         <Image
           source={{ uri: this.src }}
-          style={styles.imageStyle}
+          style={{ ...styles.imageStyleHours, height: this.state.height }}
           PlaceholderContent={<Icon name="train" color="#ffffff" />} //<ActivityIndicator />}
         />
-        <View style={styles.infoContainer}>
+        <View
+          onLayout={(event) => {
+            var { x, y, width, height } = event.nativeEvent.layout;
+            this.setState({ height: height });
+          }}
+          style={styles.infoContainerHours}
+        >
           <Text numberOfLines={1} style={styles.title}>
             {this.props.business.name}
           </Text>
           <Divider style={{ backgroundColor: "gray" }} />
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Rating fractions={1} imageSize={25} style={styles.ratings} />
-            <Avatar
-              onPress={this.showHeart}
-              rounded
-              icon={{
-                name:
-                  this.props.hearts[this.props.id] === true
-                    ? "favorite"
-                    : "favorite-border",
-              }}
-            />
-          </View>
-          {this.props.business.opening_hours !== undefined ? (
-            this.props.selectedTab === "list" ? (
-              this.openingHours(this.props.business.opening_hours.periods) ? (
-                <View style={styles.hours}>
-                  <TouchableOpacity onPress={this.showHours}>
-                    <Text style={{ color: "blue" }}>Open Now </Text>
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <View style={styles.hours}>
-                  <TouchableOpacity onPress={this.showHours}>
-                    <Text style={{ color: "red" }}>Closed now </Text>
-                  </TouchableOpacity>
-                </View>
-              )
-            ) : (
-              <Button
-                onPress={this.showHours}
-                title={
-                  this.openingHours(this.props.business.opening_hours.periods)
-                    ? "Open now"
-                    : "Closed now"
-                }
-              />
-            )
-          ) : (
-            <View style={{ ...styles.hours }}>
-              <Text>Know if they're open? Add hours here...</Text>
-            </View>
-          )}
 
-          <Text numberOfLines={2} style={styles.address}>
-            {cleanAddress(this.props.business.lineOne)}
-          </Text>
-          {this.props.business.addressLn2 && (
-            <Text numberOfLines={1} style={styles.address}>
-              {this.props.business.addressLn2}
-            </Text>
-          )}
+          <Rating fractions={1} imageSize={25} style={styles.ratings} />
+
+          <View style={{ marginBottom: 5 }}>
+            <TouchableOpacity onPress={this.closeHours}>
+              {this.openingHours(this.props.business.opening_hours.periods) ? (
+                <Text style={{ color: "blue" }}>Open Now</Text>
+              ) : (
+                <Text style={{ color: "red" }}>Closed Now</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+
           <Text numberOfLines={1} style={styles.address}>
-            {this.capitalizeFirstLetters(this.props.business.city) +
-              ", " +
-              this.capitalizeFirstLetters(this.props.business.state) +
-              " " +
-              this.props.business.zip}
+            {this.props.business.opening_hours.weekday_text[0]}
           </Text>
+          <Text numberOfLines={1} style={styles.address}>
+            {this.props.business.opening_hours.weekday_text[1]}
+          </Text>
+          <Text numberOfLines={1} style={styles.address}>
+            {this.props.business.opening_hours.weekday_text[2]}
+          </Text>
+          <Text numberOfLines={1} style={styles.address}>
+            {this.props.business.opening_hours.weekday_text[3]}
+          </Text>
+          <Text numberOfLines={1} style={styles.address}>
+            {this.props.business.opening_hours.weekday_text[4]}
+          </Text>
+          <Text numberOfLines={1} style={styles.address}>
+            {this.props.business.opening_hours.weekday_text[5]}
+          </Text>
+          <Text numberOfLines={1} style={styles.address}>
+            {this.props.business.opening_hours.weekday_text[6]}
+          </Text>
+
           {/*<Button
             icon={<Icon name="code" color="#ffffff" />}
             buttonStyle={{
@@ -295,8 +197,6 @@ class BusinessCard extends React.Component {
           />*/}
         </View>
       </Card>
-    ) : (
-      <HoursCard business={this.props.business} hours={this.showHours} />
     );
   }
 
@@ -326,4 +226,4 @@ class BusinessCard extends React.Component {
   };
 }
 
-export default BusinessCard;
+export default HoursCard;

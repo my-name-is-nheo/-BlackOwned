@@ -103,6 +103,44 @@ class FillDb extends React.Component {
     const dataArr = JSON.stringify(originalData.data.results);
     await AsyncStorage.setItem("arrMeDatey", dataArr);
   };
+  correctBackend = async () => {
+    const currentDb = await axios.get(
+      `http://192.168.43.49:5000/api/users/db/localBusinesses`
+    );
+    const backEnd = currentDb.data;
+    const origData = await AsyncStorage.getItem("arrMeDatey");
+    const origDataParsed = JSON.parse(origData);
+
+    // let output = [];
+    for (var i = 0; i < backEnd.length; i++) {
+      for (var j = 0; j < origDataParsed.length; j++) {
+        if (backEnd[i].name === origDataParsed[j].legalBusinessName) {
+          const updateObject = {
+            ...origDataParsed[j].samAddress,
+            linkingId: backEnd[i].linkingId,
+          };
+          await axios.post(
+            `http://192.168.43.49:5000/api/users/db/localBusinesses/addresses`,
+            updateObject
+          );
+        }
+      }
+    }
+  };
+
+  clearLiked = async () => {
+    const currentDb = await axios.get(
+      `http://192.168.43.49:5000/api/users/db/localBusinesses`
+    );
+    for (var i = 0; i < currentDb.data.length; i++) {
+      if (currentDb.data[i].liked) {
+        console.log("It didn't work!");
+        const found = { ...currentDb.data[i] };
+        await axios.post(`http://192.168.43.49:5000/api/auth/cleanse`, found);
+      }
+    }
+    console.log("loop ran, found no instances");
+  };
   render() {
     return (
       <View
@@ -114,8 +152,10 @@ class FillDb extends React.Component {
           backGroundColor: "blue",
         }}
       >
-        <Button onPress={this.addZips} title="Add zip codes" />
+        {/* <Button onPress={this.addZips} title="Add zip codes" />
         <Button onPress={this.zipLength} title="See zips" />
+        <Button onPress={this.correctBackend} title="Final Address Fix" /> */}
+        <Button onPress={this.clearLiked} title="Clear liked" />
         <Text>When da button get a pressed, da Db a getta filled...</Text>
       </View>
     );

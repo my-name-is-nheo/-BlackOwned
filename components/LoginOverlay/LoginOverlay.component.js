@@ -1,9 +1,45 @@
 import React, { useState } from "react";
-import { Button, Overlay, Card, colors } from "react-native-elements";
+import { AsyncStorage } from "react-native";
+import { Overlay, Card, colors, Input, Button } from "react-native-elements";
+import Icon from "react-native-vector-icons/FontAwesome";
+import axios from "axios";
+
 import { View, Text, TouchableOpacity, Image, Linking } from "react-native";
-import styles from "../components/BusinessCard/BusinessCard.component.style";
-import BusinessCard from "../components/BusinessCard/BusinessCard.component";
-const OverlayTest = (props) => {
+const LoginOverlay = (props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const setInfo = (e, callBack) => {
+    callBack(e.nativeEvent.text);
+  };
+  const submit = async () => {
+    try {
+      const payload = { email, password };
+      const postToken = await axios.post(
+        "http://192.168.43.49:5000/api/userLogin/",
+        payload
+      );
+      const token = postToken.headers["x-auth-token"];
+      await AsyncStorage.setItem("userToken", token);
+      props.removeOverlay();
+      props.update();
+
+      //  const hearts = await props.findHearts()
+      //   props.setHearts({heart: hearts})
+    } catch (err) {
+      if (err.response.data === "Either password or email is incorrect.") {
+        console.log(
+          err.response.data,
+          "axios post failed, you're hitting an error"
+        );
+        props.removeOverlay();
+      }
+      //   if (err.response.data === "banned") {
+      //     this.props.cameFromBack(false);
+
+      //     this.props.history.push("/banned");
+      //   }
+    }
+  };
   return (
     <View>
       <Overlay
@@ -11,7 +47,21 @@ const OverlayTest = (props) => {
         isVisible={props.visible}
         onBackdropPress={props.removeOverlay}
       >
-        <BusinessCard business={props.business} />
+        <Card title="Login required">
+          <Input
+            onChange={(e) => {
+              setInfo(e, setEmail);
+            }}
+            placeholder="Enter your email"
+          />
+          <Input
+            onChange={(e) => {
+              setInfo(e, setPassword);
+            }}
+            placeholder="Enter your password"
+          />
+          <Button onPress={submit} title="submit" />
+        </Card>
         {/* <Card
           title={props.locationName}
 
@@ -71,4 +121,4 @@ const OverlayTest = (props) => {
     </View>
   );
 };
-export default OverlayTest;
+export default LoginOverlay;

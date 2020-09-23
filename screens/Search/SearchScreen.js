@@ -40,6 +40,7 @@ class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedBusiness: null,
       nearbyBusinesses: null,
       currentCoordinates: null,
       selectedTab: "map",
@@ -196,12 +197,8 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
     this.setState({ actionVisible: true, setOverlay: false });
   };
   handleSetOverlay = async (business) => {
-    console.log(
-      business.photos[0].photo_reference,
-      "indeed, you ran handle set overlay"
-    );
-
     this.setState({
+      selectedBusiness: business,
       setOverlay: true,
       locationName: business.name,
       address: business.formatted_address,
@@ -296,10 +293,18 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
             )}
             onPress={() => this.setState({ selectedTab: "list" })}
           >
-            <BusinessesList businesses={this.state.nearbyBusinesses} />
+            <BusinessesList
+              selectedTab={this.state.selectedTab}
+              businesses={this.state.nearbyBusinesses}
+              loginAlert={this.props.loginAlert}
+              setLoginAlert={this.props.setLoginAlert}
+              removeOverlayAlert={this.props.removeOverlayAlert}
+            />
           </TabNavigator.Item>
         </TabNavigator>
         <OverlayTest
+          selectedTab={this.state.selectedTab}
+          business={this.state.selectedBusiness}
           address={this.state.address}
           locationName={this.state.locationName}
           removeOverlay={this.removeOverlay}
@@ -309,6 +314,7 @@ Under the hood - whenever a person opens the app, their token is renewed for ano
           phoneNumber={this.state.phoneNumber}
           openNow={this.state.openNow}
           handleActionButton={this.handleActionButton}
+          {...this.props}
         />
         {/*  <SendMail
           address={"This approach works"}

@@ -25,8 +25,8 @@ import STATES from "../../constants/States";
 const window = Dimensions.get("window");
 const image_Height = window.width / 2;
 const image_HeightSmall = window.width / 4;
-const BLMLOGO = require("../../images/blm.png");
-const UPLOADIMAGE = require("../../images/uploadImageDefault.png");
+// const BLMLOGO = require("../../images/blm.png");
+// const UPLOADIMAGE = require("../../images/uploadImageDefault.png");
 
 class AddScreen extends React.Component {
   constructor(props) {
@@ -247,10 +247,10 @@ class AddScreen extends React.Component {
           >
             Local Business not located? Add and promote them yourself!
           </Text>
-          <Animated.Image
+          {/* <Animated.Image
             source={BLMLOGO}
             style={[styles.blmLogo, { height: this.imageHeight }]}
-          />
+          /> */}
           <ScrollView>
             <Picker
               style={styles.input}
@@ -289,7 +289,7 @@ class AddScreen extends React.Component {
             />
             <TouchableOpacity onPress={this.handleChoosePhoto}>
               <View style={{ justifyContent: "center" }}>
-                <Image source={UPLOADIMAGE} style={styles.dropImageButton} />
+                {/* <Image source={UPLOADIMAGE} style={styles.dropImageButton} /> */}
               </View>
             </TouchableOpacity>
           </ScrollView>
