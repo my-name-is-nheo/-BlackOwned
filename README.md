@@ -1,3 +1,4 @@
-# BlackerBusinessBureau
-# saveLives
-# saveLives
+# Bizzy
+
+npm i
+npm start
